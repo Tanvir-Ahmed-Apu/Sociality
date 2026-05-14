@@ -1,0 +1,283 @@
+/* Telegram-style message input animations and effects */
+
+/* Dark mode styles */
+.telegram-input-container {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.telegram-input-container:hover {
+  border-color: rgba(0, 179, 116, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 179, 116, 0.1);
+}
+
+.telegram-input-container:focus-within {
+  border-color: #00B374;
+  box-shadow: 0 4px 20px rgba(0, 179, 116, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Light mode styles */
+[data-theme="light"] .telegram-input-container,
+.chakra-ui-light .telegram-input-container {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 249, 250, 0.95) 100%);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .telegram-input-container:hover,
+.chakra-ui-light .telegram-input-container:hover {
+  border-color: rgba(0, 179, 116, 0.4);
+  box-shadow: 0 4px 16px rgba(0, 179, 116, 0.15);
+}
+
+[data-theme="light"] .telegram-input-container:focus-within,
+.chakra-ui-light .telegram-input-container:focus-within {
+  border-color: #00B374;
+  box-shadow: 0 4px 20px rgba(0, 179, 116, 0.25);
+  transform: translateY(-1px);
+}
+
+.telegram-textarea {
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  resize: none !important;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.4;
+  overflow: hidden;
+}
+
+.telegram-textarea:focus {
+  box-shadow: none !important;
+  border: none !important;
+}
+
+.telegram-textarea::placeholder {
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 400;
+}
+
+/* Light mode placeholder */
+[data-theme="light"] .telegram-textarea::placeholder,
+.chakra-ui-light .telegram-textarea::placeholder {
+  color: rgba(0, 0, 0, 0.5);
+  font-weight: 400;
+}
+
+.telegram-send-button {
+  background: linear-gradient(135deg, #00B374 0%, #00b377 100%);
+  border: none;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(0, 179, 116, 0.3);
+  color: white !important;
+}
+
+/* Light mode send button */
+[data-theme="light"] .telegram-send-button,
+.chakra-ui-light .telegram-send-button {
+  background: linear-gradient(135deg, #00B374 0%, #00b377 100%);
+  box-shadow: 0 2px 8px rgba(0, 179, 116, 0.25);
+  color: white !important;
+}
+
+.telegram-send-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 16px rgba(0, 179, 116, 0.4);
+}
+
+/* Light mode send button hover */
+[data-theme="light"] .telegram-send-button:hover,
+.chakra-ui-light .telegram-send-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 16px rgba(0, 179, 116, 0.2) !important;
+  background: linear-gradient(135deg, #00B374 0%, #00b377 100%) !important;
+}
+
+.telegram-send-button:active {
+  transform: scale(0.95);
+}
+
+.telegram-voice-button {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Light mode voice button */
+[data-theme="light"] .telegram-voice-button,
+.chakra-ui-light .telegram-voice-button {
+  background: rgba(0, 0, 0, 0.05);
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.telegram-voice-button:hover {
+  background: rgba(59, 130, 246, 0.2);
+  color: #3b82f6;
+  transform: scale(1.05);
+}
+
+.telegram-voice-button.recording {
+  background: #ef4444;
+  color: white;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+}
+
+.telegram-attach-button {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Light mode attach button */
+[data-theme="light"] .telegram-attach-button,
+.chakra-ui-light .telegram-attach-button {
+  background: rgba(0, 0, 0, 0.05);
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.telegram-attach-button:hover {
+  background: rgba(59, 130, 246, 0.2);
+  color: #3b82f6;
+  transform: scale(1.05);
+}
+
+.telegram-emoji-button {
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Light mode emoji button */
+[data-theme="light"] .telegram-emoji-button,
+.chakra-ui-light .telegram-emoji-button {
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.telegram-emoji-button:hover {
+  background: rgba(249, 115, 22, 0.2);
+  color: #f97316;
+  transform: scale(1.1);
+}
+
+.telegram-attachment-menu {
+  background: rgba(20, 20, 20, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 8px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* Light mode attachment menu */
+[data-theme="light"] .telegram-attachment-menu,
+.chakra-ui-light .telegram-attachment-menu {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+}
+
+.telegram-emoji-picker {
+  background: rgba(20, 20, 20, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* Light mode emoji picker */
+[data-theme="light"] .telegram-emoji-picker,
+.chakra-ui-light .telegram-emoji-picker {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+}
+
+.telegram-image-preview {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 12px;
+  backdrop-filter: blur(10px);
+}
+
+/* Light mode image preview */
+[data-theme="light"] .telegram-image-preview,
+.chakra-ui-light .telegram-image-preview {
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+/* Smooth height transition for textarea */
+.telegram-textarea-container {
+  transition: height 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Custom scrollbar for textarea */
+.telegram-textarea::-webkit-scrollbar {
+  width: 4px;
+}
+
+.telegram-textarea::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.telegram-textarea::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+}
+
+.telegram-textarea::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}

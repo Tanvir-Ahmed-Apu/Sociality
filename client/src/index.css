@@ -1,0 +1,887 @@
+/* Import the gradient animation styles */
+@import url('./styles/GradientAnimation.css');
+/* Import performance optimization styles */
+@import url('./styles/PerformanceOptimizations.css');
+/* Import mobile modal enhancements */
+@import url('./styles/MobileModalEnhancements.css');
+/* Import mobile navigation enhancements */
+@import url('./styles/MobileNavigationEnhancements.css');
+/* Import dynamic mobile header styles */
+@import url('./styles/DynamicMobileHeader.css');
+
+/* CSS Custom Properties for Theme Support */
+:root {
+  /* Dark theme colors (default) */
+  --bg-primary: #0a0a0a;
+  --bg-secondary: #111111;
+  --bg-card: #111111;
+  --bg-hover: #1a1a1a;
+  --text-primary: #ffffff;
+  --text-secondary: #a0aec0;
+  --text-muted: #616161;
+  --border-primary: transparent;
+  --border-hover: rgba(255, 255, 255, 0.05);
+  --glass-bg: rgba(10, 10, 10, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.05);
+  --navbar-bg: rgba(5, 5, 5, 0.9);
+}
+
+
+/* Light theme colors */
+[data-theme="light"] {
+  --bg-primary: #f8f9fa;
+  --bg-secondary: #ffffff;
+  --bg-card: #ffffff;
+  --bg-hover: #f1f3f5;
+  --text-primary: #1a1a1a;
+  --text-secondary: #495057;
+  --text-muted: #adb5bd;
+  --border-primary: rgba(0, 0, 0, 0.1);
+  --border-hover: rgba(0, 0, 0, 0.15);
+  --glass-bg: rgba(255, 255, 255, 0.3);
+  --glass-border: rgba(0, 0, 0, 0.05);
+  --navbar-bg: rgba(255, 255, 255, 0.95);
+}
+/* Global reset to eliminate black margins */
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow-x: clip;
+  background-color: var(--bg-primary);
+  transition: background-color 0.2s ease;
+}
+
+/* Allow auth page to override body background */
+body.auth-page-no-scroll {
+  background: linear-gradient(135deg,
+    #0a1a15 0%,                     /* Very dark green tint */
+    #0a1520 25%,                    /* Very dark blue tint */
+    #0a1518 50%,                    /* Very dark mix */
+    #0a1520 75%,                    /* Very dark blue tint */
+    #0a1a15 100%                    /* Very dark green tint */
+  ) !important;
+}
+
+#root {
+  margin: 0 !important;
+  padding: 0 !important;
+  background-color: transparent;
+}
+
+.icon-container {
+	border-radius: 50%;
+	padding: 8px;
+	width: 40px;
+	height: 40px;
+	transition: background-color 0.3s ease-in-out;
+}
+
+.icon-container:hover {
+	background-color: var(--bg-hover);
+}
+
+/* Clean icon style without background */
+.clean-icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	transition: transform 0.2s ease;
+}
+
+.clean-icon:hover {
+	transform: scale(1.1);
+}
+
+/* Ensure Phosphor React icons inherit color properly */
+svg[data-phosphor] {
+	color: inherit !important;
+}
+
+/* Glass effect styles - optimized for performance */
+.glass-card {
+	background: var(--glass-bg) !important;
+	backdrop-filter: blur(5px) !important; /* Reduced blur for better performance */
+	border: 1px solid var(--glass-border) !important;
+	box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.2) !important; /* Reduced shadow */
+	transition: none !important; /* Removed transition for better performance */
+}
+
+.glass-card:hover {
+	border-color: var(--border-hover) !important; /* Subtle border change */
+	box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.2) !important; /* Consistent shadow */
+}
+
+/* Glass navbar - optimized for performance */
+.glass-navbar {
+	background: var(--navbar-bg) !important; /* Increased opacity to reduce need for blur */
+	backdrop-filter: blur(4px) !important; /* Reduced blur for better performance */
+	border-bottom: 1px solid var(--glass-border) !important;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1) !important; /* Reduced shadow */
+}
+
+/* Glass tab - optimized for performance */
+.glass-tab {
+	background: var(--glass-bg) !important;
+	backdrop-filter: blur(4px) !important; /* Reduced blur for better performance */
+	border: 1px solid var(--glass-border) !important;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15) !important; /* Reduced shadow */
+	transition: none !important; /* Removed transition for better performance */
+}
+
+.glass-tab:hover {
+	background: var(--bg-hover) !important; /* Subtle hover effect */
+	border-color: var(--border-hover) !important;
+}
+
+/* Glass message bubble - light glassy effect for Telegram-like appearance */
+.glass-message-bubble {
+	backdrop-filter: blur(10px) saturate(180%) !important;
+	-webkit-backdrop-filter: blur(10px) saturate(180%) !important;
+	border: 1px solid rgba(255, 255, 255, 0.2) !important;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1),
+	            0 1px 3px rgba(0, 0, 0, 0.08),
+	            inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+	transition: all 0.2s ease !important;
+}
+
+.glass-message-bubble:hover {
+	background: var(--bg-hover) !important;
+	border-color: var(--border-hover) !important;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+	transform: none !important;
+}
+
+/* Mobile optimizations for glass message bubbles */
+@media (max-width: 768px) {
+	.glass-message-bubble {
+		backdrop-filter: blur(8px) saturate(150%) !important;
+		-webkit-backdrop-filter: blur(8px) saturate(150%) !important;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08),
+		            0 1px 2px rgba(0, 0, 0, 0.06),
+		            inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
+	}
+
+	.glass-message-bubble:hover {
+		transform: none !important; /* Disable hover transform on mobile */
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08),
+		            0 1px 2px rgba(0, 0, 0, 0.06),
+		            inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
+	}
+}
+
+/* Active navigation indicator - simplified */
+.nav-active-indicator {
+	position: absolute;
+	bottom: -2px;
+	left: 50%;
+	transform: translateX(-50%);
+	width: 4px;
+	height: 4px;
+	border-radius: 50%;
+	background-color: #00B374;
+	/* Removed box-shadow for better performance */
+}
+
+/* For mobile devices, position the indicator differently */
+@media (max-width: 768px) {
+	.nav-active-indicator {
+		bottom: 0;
+		width: 6px;
+		height: 6px;
+	}
+}
+
+.glass-tab[aria-selected="true"] {
+	border-color: rgba(255, 255, 255, 0.1) !important;
+	box-shadow: 0 4px 18px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Subtle gradient background */
+.gradient-bg {
+	background: linear-gradient(135deg, #080808 0%, #101010 100%);
+	position: relative;
+}
+
+.gradient-bg::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: radial-gradient(ellipse at top right, rgba(0, 179, 116, 0.1) 0%, rgba(0, 0, 0, 0) 50%);
+	pointer-events: none;
+}
+
+.gradient-bg::after {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	width: 100%;
+	height: 100%;
+	background: radial-gradient(ellipse at bottom left, rgba(0, 121, 185, 0.1) 0%, rgba(0, 0, 0, 0) 50%);
+	pointer-events: none;
+}
+
+/* Text wrapping for all content */
+p, span, div, h1, h2, h3, h4, h5, h6, li, td, th, blockquote, pre, code {
+	overflow-wrap: break-word;
+	word-wrap: break-word;
+	word-break: break-word;
+	hyphens: auto;
+}
+
+
+
+/* Button hover effects */
+.brand-button {
+	transition: all 0.3s ease;
+	position: relative;
+	overflow: hidden;
+}
+
+.brand-button::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: -100%;
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+	transition: all 0.5s ease;
+}
+
+.brand-button:hover::before {
+	left: 100%;
+}
+
+/* Threads-like suggested user card - no hover effects */
+.threads-user-card {
+	background: var(--bg-primary) !important;
+	border: 1px solid var(--border-primary) !important;
+	transition: none !important;
+}
+
+.threads-user-card:hover {
+	border-color: var(--border-primary) !important;
+	box-shadow: none !important;
+	transform: none !important;
+}
+
+/* Threads-like post card - rounded rectangle with visible styling */
+.threads-post-card {
+	background: var(--bg-card) !important;
+	border: 1px solid var(--border-primary) !important;
+	border-radius: 16px !important;
+	transition: none !important;
+	box-shadow: none !important;
+}
+
+.threads-post-card:hover {
+	background: var(--bg-hover) !important;
+	border: 1px solid var(--border-hover) !important;
+	box-shadow: none !important;
+	transform: none !important;
+}
+
+/* Accent colors for highlights */
+.accent-primary {
+	color: #00B374 !important;
+}
+
+.accent-secondary {
+	color: #0079b9 !important;
+}
+
+/* Transparent Slider Styles - optimized for performance */
+.transparent-slider-container {
+	background: var(--bg-secondary) !important; /* Increased opacity to reduce need for blur */
+	backdrop-filter: blur(3px) !important; /* Reduced blur for better performance */
+	border: 1px solid var(--glass-border) !important;
+	box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.15) !important; /* Reduced shadow */
+	transition: none !important; /* Removed transition for better performance */
+}
+
+.transparent-slider-wrapper {
+	overflow: visible !important;
+}
+
+/* Style for the suggested user cards - optimized for performance */
+.suggested-user-card {
+	background: var(--bg-secondary) !important;
+	border: 1px solid var(--border-primary) !important;
+	border-radius: 16px !important;
+	transition: none !important; /* Removed transition for better performance */
+}
+
+.suggested-user-card:hover {
+	border-color: var(--border-hover) !important;
+	/* Removed transform for better performance */
+}
+
+/* Style for the search page suggested user list items */
+.search-user-item {
+	background: var(--bg-secondary) !important;
+	border: none !important;
+	border-radius: 16px !important;
+	box-shadow: none !important;
+	transition: none !important;
+}
+
+.search-user-item:hover {
+	transform: none !important;
+	border: none !important;
+	box-shadow: none !important;
+	background: var(--bg-secondary) !important;
+}
+
+/* Style for the slider navigation buttons - light mode compatible */
+.transparent-nav-button {
+	backdrop-filter: blur(5px) !important;
+	/* Background and border colors are now handled by Chakra UI useColorModeValue in the component */
+}
+
+/* Override slick slider dots - light mode compatible */
+[data-theme="light"] .transparent-slider .slick-dots li button:before {
+	color: rgba(0, 0, 0, 0.5) !important;
+}
+
+[data-theme="light"] .transparent-slider .slick-dots li.slick-active button:before {
+	color: rgba(0, 0, 0, 0.8) !important;
+}
+
+/* Dark mode dots (default) */
+.transparent-slider .slick-dots li button:before {
+	color: rgba(255, 255, 255, 0.5) !important;
+}
+
+.transparent-slider .slick-dots li.slick-active button:before {
+	color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* Make the slider track transparent */
+.transparent-slider .slick-track {
+	display: flex !important;
+	gap: 10px !important;
+}
+
+/* Message animations */
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes messageNew {
+	0% {
+		opacity: 0;
+		transform: translateY(10px);
+	}
+	100% {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+.message-new {
+	animation: messageNew 0.3s ease-out forwards;
+}
+
+.message-item {
+	position: relative;
+	transition: all 0.2s ease;
+}
+
+
+
+.hover-effect {
+	transition: background-color 0.2s ease;
+}
+
+/* Optimize images in messages */
+.optimized-image {
+	object-fit: contain;
+	max-width: 100%;
+	height: auto;
+	will-change: transform;
+}
+
+
+/* ===== LEGACY RESPONSIVE RULES (for compatibility) ===== */
+
+/* Responsive adjustments for small screens (800x900 and similar) */
+@media (max-width: 900px) and (max-height: 1000px) {
+	/* Ensure message input area has enough space above bottom navigation */
+	.message-container {
+		padding-bottom: 0px !important;
+	}
+
+	/* Adjust message input positioning for better visibility */
+	.chakra-input {
+		margin-bottom: 10px !important;
+	}
+}
+
+/* ===== MOBILE PERFORMANCE OPTIMIZATIONS ===== */
+
+/* Mobile logo scroll behavior - optimized for performance */
+.mobile-logo-scroll {
+	will-change: transform, opacity;
+	backface-visibility: hidden;
+	transform-style: preserve-3d;
+}
+
+/* Mobile-specific optimizations by screen size */
+@media (max-width: 320px) {
+	/* Ultra-compact mode for very small screens */
+	.mobile-logo-scroll {
+		transition: transform 0.2s ease, opacity 0.2s ease !important;
+	}
+}
+
+@media (min-width: 321px) and (max-width: 767px) {
+	/* Standard mobile optimizations */
+	.mobile-logo-scroll {
+		transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+		           opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+	}
+
+	/* Optimize logo container for mobile scroll performance */
+	.mobile-logo-scroll * {
+		will-change: auto;
+		transform: translateZ(0);
+	}
+}
+
+/* ===== MOBILE TOUCH OPTIMIZATIONS ===== */
+
+/* Improve touch targets for mobile */
+@media (max-width: 767px) {
+	/* Ensure minimum touch target size (44px) */
+	button, .chakra-button {
+		min-height: 44px !important;
+		min-width: 44px !important;
+	}
+
+	/* Improve tap highlighting */
+	button, .chakra-button, a {
+		-webkit-tap-highlight-color: rgba(0, 179, 116, 0.2);
+		-webkit-touch-callout: none;
+		-webkit-user-select: none;
+		user-select: none;
+	}
+
+	/* Prevent text selection on UI elements */
+	.glass-navbar, .nav-active-indicator {
+		-webkit-user-select: none;
+		user-select: none;
+	}
+}
+
+/* ===== MOBILE TYPOGRAPHY ===== */
+
+/* Responsive font sizes for better mobile readability */
+@media (max-width: 320px) {
+	/* Very small screens - compact text */
+	body, .chakra-text {
+		font-size: 14px !important;
+		line-height: 1.4 !important;
+	}
+}
+
+@media (min-width: 321px) and (max-width: 374px) {
+	/* Small mobile screens */
+	body, .chakra-text {
+		font-size: 15px !important;
+		line-height: 1.45 !important;
+	}
+}
+
+@media (min-width: 375px) and (max-width: 767px) {
+	/* Standard mobile screens */
+	body, .chakra-text {
+		font-size: 16px !important;
+		line-height: 1.5 !important;
+	}
+}
+
+/* ===== ENHANCED MOBILE RESPONSIVENESS ===== */
+
+/* Mobile-first base styles */
+* {
+	box-sizing: border-box;
+}
+
+html {
+	/* Prevent horizontal scrolling on mobile */
+	overflow-x: hidden;
+	/* Improve text rendering on mobile */
+	-webkit-text-size-adjust: 100%;
+	-ms-text-size-adjust: 100%;
+	text-size-adjust: 100%;
+}
+
+body {
+	/* Prevent horizontal scrolling */
+	overflow-x: clip;
+	/* Improve scrolling performance on mobile */
+	-webkit-overflow-scrolling: touch;
+	/* Prevent pull-to-refresh on mobile browsers */
+	overscroll-behavior-y: contain;
+}
+
+/* ===== MOBILE LAYOUT IMPROVEMENTS ===== */
+
+/* Ensure full viewport height on mobile browsers */
+#root {
+	min-height: 100vh;
+	min-height: 100dvh; /* Dynamic viewport height for mobile browsers */
+}
+
+/* Mobile-specific container improvements */
+@media (max-width: 767px) {
+	/* Improve container spacing on mobile */
+	.chakra-container {
+		padding-left: 12px !important;
+		padding-right: 12px !important;
+	}
+
+	/* Optimize modal sizing for mobile */
+	.chakra-modal__content {
+		margin: 16px !important;
+		max-height: calc(100vh - 32px) !important;
+		max-width: calc(100vw - 32px) !important;
+	}
+
+	/* Improve form inputs on mobile */
+	.chakra-input, .chakra-textarea {
+		font-size: 16px !important; /* Prevent zoom on iOS */
+		border-radius: 12px !important;
+	}
+
+	/* Better button spacing on mobile */
+	.chakra-button {
+		min-height: 44px !important;
+		padding: 12px 16px !important;
+	}
+}
+
+/* ===== MOBILE TOUCH ENHANCEMENTS ===== */
+
+/* Improve touch feedback */
+@media (max-width: 767px) {
+	/* Better touch highlighting */
+	button, .chakra-button, [role="button"] {
+		-webkit-tap-highlight-color: rgba(0, 179, 116, 0.2);
+		-webkit-touch-callout: none;
+		touch-action: manipulation;
+	}
+
+	/* Improve link touch targets */
+	a {
+		-webkit-tap-highlight-color: rgba(0, 179, 116, 0.2);
+		touch-action: manipulation;
+	}
+
+	/* Prevent text selection on UI elements */
+	.glass-navbar, .nav-active-indicator, .chakra-button {
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+	}
+
+	/* Allow text selection in content areas */
+	.chakra-text, .post-content, .message-content {
+		-webkit-user-select: text;
+		-moz-user-select: text;
+		-ms-user-select: text;
+		user-select: text;
+	}
+}
+
+/* ===== MOBILE SCROLLING OPTIMIZATIONS ===== */
+
+/* Smooth scrolling for mobile */
+@media (max-width: 767px) {
+	html {
+		scroll-behavior: smooth;
+	}
+
+	/* Optimize scrollable containers */
+	.chakra-modal__body, .message-container, .post-container {
+		-webkit-overflow-scrolling: touch;
+		overscroll-behavior: contain;
+	}
+
+	/* Prevent bounce scrolling where not needed */
+	.glass-navbar {
+		overscroll-behavior: none;
+	}
+}
+
+/* ===== MOBILE KEYBOARD HANDLING ===== */
+
+/* Handle virtual keyboard on mobile */
+@media (max-width: 767px) {
+	/* Adjust layout when keyboard is visible */
+	.chakra-modal__content {
+		max-height: 100vh !important;
+		overflow-y: auto;
+	}
+
+	/* Ensure input fields are visible when keyboard appears */
+	.message-input-container {
+		position: relative;
+		z-index: 1000;
+	}
+}
+
+/* ===== MOBILE PERFORMANCE OPTIMIZATIONS ===== */
+
+/* GPU acceleration for smooth animations on mobile */
+@media (max-width: 767px) {
+	.post-container, .message-container, .glass-navbar {
+		transform: translateZ(0);
+		backface-visibility: hidden;
+		will-change: transform;
+	}
+
+	/* Optimize image rendering on mobile */
+	img {
+		image-rendering: -webkit-optimize-contrast;
+		image-rendering: crisp-edges;
+	}
+
+	/* Reduce motion for users who prefer it */
+	@media (prefers-reduced-motion: reduce) {
+		* {
+			animation-duration: 0.01ms !important;
+			animation-iteration-count: 1 !important;
+			transition-duration: 0.01ms !important;
+		}
+	}
+}
+
+/* ===== MOBILE ACCESSIBILITY IMPROVEMENTS ===== */
+
+/* Better focus indicators on mobile */
+@media (max-width: 767px) {
+	button:focus, .chakra-button:focus {
+		outline: 2px solid #00B374;
+		outline-offset: 2px;
+	}
+
+	/* Improve contrast for better readability */
+	.chakra-text {
+		text-shadow: none;
+	}
+
+	/* Ensure adequate spacing between interactive elements */
+	.chakra-button + .chakra-button {
+		margin-left: 8px;
+	}
+}
+
+/* ===== LANDSCAPE ORIENTATION OPTIMIZATIONS ===== */
+
+/* Optimize for mobile landscape mode */
+@media (max-width: 767px) and (orientation: landscape) {
+	/* Reduce header height in landscape */
+	.mobile-logo-scroll {
+		top: 8px !important;
+	}
+
+	/* Adjust navigation for landscape */
+	.glass-navbar {
+		bottom: 8px !important;
+		padding: 8px 16px !important;
+	}
+
+	/* Optimize modal height for landscape */
+	.chakra-modal__content {
+		max-height: calc(100vh - 16px) !important;
+	}
+}
+
+/* ===== VERY SMALL SCREENS (< 320px) ===== */
+
+@media (max-width: 319px) {
+	/* Ultra-compact mode for very small screens */
+	.chakra-container {
+		padding-left: 8px !important;
+		padding-right: 8px !important;
+	}
+
+	.glass-navbar {
+		gap: 8px !important;
+		padding: 8px 12px !important;
+	}
+
+	.chakra-button {
+		min-height: 40px !important;
+		min-width: 40px !important;
+		padding: 8px 12px !important;
+	}
+}
+
+/* ===== LARGE MOBILE SCREENS (414px+) ===== */
+
+@media (min-width: 414px) and (max-width: 767px) {
+	/* Optimize for larger mobile screens */
+	.chakra-container {
+		padding-left: 16px !important;
+		padding-right: 16px !important;
+	}
+
+	.glass-navbar {
+		padding: 12px 20px !important;
+	}
+
+	.chakra-button {
+		min-height: 48px !important;
+		padding: 14px 18px !important;
+	}
+}
+
+/* ===== DESKTOP LOGO POSITIONING (768px+) ===== */
+
+@media (min-width: 768px) {
+	/* Ensure logo stays at top on desktop - no fixed positioning */
+	.desktop-logo {
+		position: static !important;
+		top: auto !important;
+		left: auto !important;
+		transform: none !important;
+		opacity: 1 !important;
+		z-index: auto !important;
+		transition: none !important;
+		/* Center the logo perfectly */
+		justify-content: center !important;
+		width: 100% !important;
+		display: flex !important;
+		align-items: center !important;
+	}
+
+	/* Prevent mobile scroll behavior on desktop */
+	.mobile-logo-scroll {
+		position: static !important;
+		top: auto !important;
+		left: auto !important;
+		transform: none !important;
+		opacity: 1 !important;
+		transition: none !important;
+	}
+}
+
+/* ===== COMIC UI OVERRIDES AND UTILITIES ===== */
+/* Modern UI Utilities */
+.hover-scale {
+  transition: transform 0.2s ease;
+}
+.hover-scale:hover {
+  transform: scale(1.02);
+}
+
+/* Comic Shadows */
+.comic-shadow {
+  box-shadow: 4px 4px 0px black !important;
+  border: 3px solid black !important;
+}
+
+[data-theme="dark"] .comic-shadow {
+  box-shadow: 4px 4px 0px rgba(255, 255, 255, 0.2) !important;
+  border: 3px solid white !important;
+}
+
+/* Comic Speech Bubble */
+.speech-bubble {
+  position: relative;
+  background: var(--bg-card);
+  border-radius: 16px;
+  border: 3px solid black;
+  box-shadow: 4px 4px 0px black;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+[data-theme="dark"] .speech-bubble {
+  border: 3px solid white;
+  box-shadow: 4px 4px 0px rgba(255, 255, 255, 0.2);
+}
+
+.speech-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -15px;
+  left: 30px;
+  border-width: 15px 15px 0;
+  border-style: solid;
+  border-color: var(--bg-card) transparent transparent transparent;
+  display: block;
+  width: 0;
+  z-index: 2;
+}
+
+.speech-bubble::before {
+  content: '';
+  position: absolute;
+  bottom: -19px;
+  left: 28px;
+  border-width: 18px 17px 0;
+  border-style: solid;
+  border-color: black transparent transparent transparent;
+  display: block;
+  width: 0;
+  z-index: 1;
+}
+
+[data-theme="dark"] .speech-bubble::before {
+  border-color: white transparent transparent transparent;
+}
+
+/* Comic Animations */
+@keyframes pop-in {
+  0% { transform: scale(0.5); opacity: 0; }
+  70% { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes shake {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(-5deg); }
+  50% { transform: rotate(5deg); }
+  75% { transform: rotate(-5deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.comic-pop {
+  animation: pop-in 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.comic-shake:active {
+  animation: shake 0.2s ease-in-out;
+}
+
+/* Sticker tags */
+.comic-sticker {
+  position: absolute;
+  font-family: 'Bangers', cursive;
+  font-size: 24px;
+  color: #FFCC00;
+  text-shadow: 2px 2px 0 #000, -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000;
+  transform: rotate(-10deg);
+  z-index: 10;
+  pointer-events: none;
+}

@@ -1,0 +1,23 @@
+[
+  {
+    "name": "telegram",
+    "url": "http://127.0.0.1:7301",
+    "registeredAt": "2026-05-14T12:21:42.626Z",
+    "lastSeen": "2026-05-14T12:21:42.626Z",
+    "status": "active"
+  },
+  {
+    "name": "sociality",
+    "url": "http://127.0.0.1:5000",
+    "registeredAt": "2026-05-14T12:21:42.631Z",
+    "lastSeen": "2026-05-14T12:21:42.631Z",
+    "status": "active"
+  },
+  {
+    "name": "discord",
+    "url": "http://127.0.0.1:7302",
+    "registeredAt": "2026-05-14T12:21:43.434Z",
+    "lastSeen": "2026-05-14T12:21:43.434Z",
+    "status": "active"
+  }
+]

@@ -1,0 +1,184 @@
+{
+  "038119c9-699d-406d-b52d-0674f56fbf05": {
+    "roomId": "038119c9-699d-406d-b52d-0674f56fbf05",
+    "name": "Tech Talk",
+    "createdAt": "2026-04-26T08:36:48.949Z",
+    "peers": [
+      "http://localhost:5000",
+      "http://localhost:7301",
+      "http://localhost:7302",
+      "http://127.0.0.1:5000",
+      "http://127.0.0.1:7301",
+      "http://127.0.0.1:7302"
+    ],
+    "messageCount": 0
+  },
+  "985e8883-bff0-4b4b-9ef5-d360f278bf85": {
+    "roomId": "985e8883-bff0-4b4b-9ef5-d360f278bf85",
+    "name": "Test123",
+    "createdAt": "2026-04-26T08:36:48.956Z",
+    "peers": [
+      "http://localhost:5000",
+      "http://localhost:7301",
+      "http://localhost:7302",
+      "http://127.0.0.1:5000",
+      "http://127.0.0.1:7301",
+      "http://127.0.0.1:7302"
+    ],
+    "messageCount": 0
+  },
+  "aeb10144-6052-4686-8ec0-34fc7dc2496b": {
+    "roomId": "aeb10144-6052-4686-8ec0-34fc7dc2496b",
+    "name": "Test",
+    "createdAt": "2026-04-26T08:36:48.964Z",
+    "peers": [
+      "http://localhost:5000",
+      "http://localhost:7301",
+      "http://localhost:7302",
+      "http://127.0.0.1:5000",
+      "http://127.0.0.1:7301",
+      "http://127.0.0.1:7302"
+    ],
+    "messageCount": 0
+  },
+  "11172391-78d3-4809-93de-0cc6e7bcc4de": {
+    "roomId": "11172391-78d3-4809-93de-0cc6e7bcc4de",
+    "name": "test",
+    "createdAt": "2026-04-26T08:36:48.971Z",
+    "peers": [
+      "http://localhost:5000",
+      "http://localhost:7301",
+      "http://localhost:7302",
+      "http://127.0.0.1:5000",
+      "http://127.0.0.1:7301",
+      "http://127.0.0.1:7302"
+    ],
+    "messageCount": 0
+  },
+  "dffb49a0-6e32-4760-acf2-3c624b42a09c": {
+    "roomId": "dffb49a0-6e32-4760-acf2-3c624b42a09c",
+    "name": "Mamiza Team",
+    "createdAt": "2026-04-26T08:36:48.980Z",
+    "peers": [
+      "http://localhost:5000",
+      "http://localhost:7301",
+      "http://localhost:7302",
+      "http://127.0.0.1:5000",
+      "http://127.0.0.1:7301",
+      "http://127.0.0.1:7302"
+    ],
+    "messageCount": 0
+  },
+  "772a0af9-e3fd-4522-97bc-c55c2e6cc780": {
+    "roomId": "772a0af9-e3fd-4522-97bc-c55c2e6cc780",
+    "name": "test",
+    "createdAt": "2026-04-26T08:36:48.990Z",
+    "peers": [
+      "http://localhost:5000",
+      "http://localhost:7301",
+      "http://localhost:7302",
+      "http://127.0.0.1:5000",
+      "http://127.0.0.1:7301",
+      "http://127.0.0.1:7302"
+    ],
+    "messageCount": 0
+  },
+  "98453b83-7d37-4a94-a0cf-4358d0cc2d55": {
+    "roomId": "98453b83-7d37-4a94-a0cf-4358d0cc2d55",
+    "name": "Telegram Room 98453b83-7d37-4a94-a0cf-4358d0cc2d55",
+    "createdAt": "2026-04-26T08:36:49.068Z",
+    "peers": [
+      "http://localhost:7301",
+      "http://localhost:5000",
+      "http://localhost:7302",
+      "http://127.0.0.1:5000",
+      "http://127.0.0.1:7301",
+      "http://127.0.0.1:7302"
+    ],
+    "messageCount": 0
+  },
+  "42b2061d-0db2-4220-bb5f-0e3f7c52d887": {
+    "roomId": "42b2061d-0db2-4220-bb5f-0e3f7c52d887",
+    "name": "Telegram Room 42b2061d-0db2-4220-bb5f-0e3f7c52d887",
+    "createdAt": "2026-04-26T08:36:49.093Z",
+    "peers": [
+      "http://localhost:7301",
+      "http://localhost:5000",
+      "http://localhost:7302",
+      "http://127.0.0.1:5000",
+      "http://127.0.0.1:7301",
+      "http://127.0.0.1:7302"
+    ],
+    "messageCount": 0
+  },
+  "ddcd6632-d0ca-465c-857c-c1ab2257cca5": {
+    "roomId": "ddcd6632-d0ca-465c-857c-c1ab2257cca5",
+    "name": "Hello",
+    "createdAt": "2026-05-03T07:13:48.751Z",
+    "peers": [
+      "https://polliwog-legal-strongly.ngrok-free.app",
+      "http://127.0.0.1:5000",
+      "http://127.0.0.1:7301",
+      "http://127.0.0.1:7302"
+    ],
+    "messageCount": 0
+  },
+  "fb38f5dd-c6f7-4515-b44a-a39d85211696": {
+    "roomId": "fb38f5dd-c6f7-4515-b44a-a39d85211696",
+    "name": "Test",
+    "createdAt": "2026-05-09T08:06:05.583Z",
+    "peers": [
+      "http://localhost:5000",
+      "http://127.0.0.1:5000",
+      "http://127.0.0.1:7301",
+      "http://127.0.0.1:7302"
+    ],
+    "messageCount": 15
+  },
+  "RBE7PQPP": {
+    "roomId": "RBE7PQPP",
+    "name": "Discord Room RBE7PQPP",
+    "createdAt": "2026-05-09T10:33:38.397Z",
+    "peers": [
+      "http://127.0.0.1:7302",
+      "http://127.0.0.1:5000",
+      "http://127.0.0.1:7301"
+    ],
+    "messageCount": 0
+  },
+  "52e0d67b-da7e-4f4b-b255-6285635b9f07": {
+    "roomId": "52e0d67b-da7e-4f4b-b255-6285635b9f07",
+    "name": "r",
+    "createdAt": "2026-05-12T15:33:28.504Z",
+    "peers": [
+      "http://localhost:5000",
+      "http://127.0.0.1:5000",
+      "http://127.0.0.1:7301",
+      "http://127.0.0.1:7302"
+    ],
+    "messageCount": 0
+  },
+  "f01f42d9-851b-4c10-a72b-5b3c042d8272": {
+    "roomId": "f01f42d9-851b-4c10-a72b-5b3c042d8272",
+    "name": "Expwy",
+    "createdAt": "2026-05-14T13:08:36.906Z",
+    "peers": [
+      "http://localhost:5000",
+      "http://127.0.0.1:5000",
+      "http://127.0.0.1:7301",
+      "http://127.0.0.1:7302"
+    ],
+    "messageCount": 8
+  },
+  "ARPZRHKV": {
+    "roomId": "ARPZRHKV",
+    "name": "Discord Room ARPZRHKV",
+    "createdAt": "2026-05-14T13:10:06.836Z",
+    "peers": [
+      "http://127.0.0.1:7302",
+      "http://127.0.0.1:5000",
+      "http://127.0.0.1:7301"
+    ],
+    "messageCount": 0
+  }
+}
