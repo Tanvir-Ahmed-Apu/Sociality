@@ -26,7 +26,6 @@ const PostPage = () => {
 
 	useEffect(() => {
 		const getPost = async () => {
-			setPosts([]);
 			try {
 				const res = await fetchWithSession(`/api/posts/${pid}`);
 				const data = await res.json();
@@ -34,7 +33,15 @@ const PostPage = () => {
 					showToast("Error", data.error, "error");
 					return;
 				}
-				setPosts([data]);
+				
+				// Keep the feed intact! Update or append the specific post.
+				setPosts((prev) => {
+					const exists = prev.some(p => p._id === data._id);
+					if (exists) {
+						return prev.map(p => p._id === data._id ? data : p);
+					}
+					return [data, ...prev];
+				});
 			} catch (error: any) {
 				showToast("Error", error.message, "error");
 			}

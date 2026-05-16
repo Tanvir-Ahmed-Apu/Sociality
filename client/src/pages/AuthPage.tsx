@@ -33,8 +33,6 @@ const AuthPage = () => {
 			display="flex"
 			flexDirection="column"
 			alignItems="center"
-			justifyContent={authScreenState === "signup" ? "flex-start" : "center"}
-			py={authScreenState === "signup" ? 8 : 0}
 		>
 			{/* Subtle background pattern */}
 			<Box
@@ -52,12 +50,20 @@ const AuthPage = () => {
 			/>
 			
 			{/* Auth card */}
-			<Box zIndex={1} w="full">
+			<Box 
+				zIndex={1} 
+				w="full" 
+				display="flex" 
+				flex={1} 
+				flexDirection="column"
+				justifyContent={authScreenState === "signup" ? "flex-start" : "center"}
+				py={authScreenState === "signup" ? 8 : 0}
+			>
 				{authScreenState === "login" ? <LoginCard /> : <SignupCard />}
 			</Box>
 
 			{/* Footer links */}
-			<Box position="relative" mt="auto" pb={4} pt={4} w="full" textAlign="center">
+			<Box position="relative" pb={4} pt={4} w="full" textAlign="center">
 				<HStack justify="center" spacing={4} fontSize="10px" color={useColorModeValue("gray.400", "gray.600")}>
 					<Text>© 2026 Sociality</Text>
 					<Link _hover={{ color: useColorModeValue("black", "white") }}>Terms</Link>

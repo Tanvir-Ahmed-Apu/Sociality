@@ -24,7 +24,7 @@ import FloatingPostButton from "../components/ui/FloatingPostButton";
 
 const HomePage = () => {
     const [posts, setPosts] = useRecoilState(postsAtom);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(posts.length === 0);
     const [activeTab, setActiveTab] = useState(0); // 0 = For You, 1 = Following
     const showToast = useShowToast();
     const user = useRecoilValue(userAtom);
@@ -36,8 +36,11 @@ const HomePage = () => {
 
     useEffect(() => {
         const getFeedPosts = async () => {
-            setLoading(true);
-            setPosts([]);
+            // Only show full-page loading spinner if we have no posts at all (first load)
+            if (posts.length === 0) {
+                setLoading(true);
+            }
+            
             try {
                 let res;
                 if (activeTab === 0) {
@@ -76,7 +79,9 @@ const HomePage = () => {
 
         // Small delay for new users who just completed profile setup
         const delay = user && user.isProfileComplete ? 500 : 0;
-        setTimeout(getFeedPosts, delay);
+        const timer = setTimeout(getFeedPosts, delay);
+        
+        return () => clearTimeout(timer);
     }, [showToast, setPosts, user, activeTab]); // Added activeTab to dependencies
 
     // Handle tab change

@@ -1,5 +1,7 @@
 import { Box, Heading, Input, Flex, Spinner, Text, VStack, InputGroup, InputLeftElement, useColorModeValue } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
+import { useRecoilState } from "recoil";
+import { suggestedUsersAtom, searchResultsAtom } from "../atoms";
 import SuggestedUserListItem from "../features/users/components/SuggestedUserListItem"; // Import the new list item component
 import useShowToast from "../hooks/useShowToast";
 import { MagnifyingGlass } from "phosphor-react";
@@ -26,11 +28,11 @@ const getScrollbarStyles = (isDark: boolean) => ({
 });
 
 const SearchPage = () => {
-    const [suggestedUsers, setSuggestedUsers] = useState<any[]>([]);
-    const [suggestedLoading, setSuggestedLoading] = useState(true);
+    const [suggestedUsers, setSuggestedUsers] = useRecoilState(suggestedUsersAtom);
+    const [suggestedLoading, setSuggestedLoading] = useState(suggestedUsers.length === 0);
     const showToast = useShowToast();
     const [searchQuery, setSearchQuery] = useState("");
-    const [searchResults, setSearchResults] = useState<any[]>([]);
+    const [searchResults, setSearchResults] = useRecoilState(searchResultsAtom);
     const [isSearching, setIsSearching] = useState(false);
 
     // Theme-aware colors - ALL hooks must be called at the top level
@@ -50,7 +52,7 @@ const SearchPage = () => {
     // Fetch Suggested Users
     useEffect(() => {
         const getSuggestedUsers = async () => {
-            setSuggestedLoading(true);
+            if (suggestedUsers.length === 0) setSuggestedLoading(true);
             try {
                 const res = await fetchWithSession("/api/users/suggested");
                 if (res.ok) {

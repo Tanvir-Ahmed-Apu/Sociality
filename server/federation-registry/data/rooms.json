@@ -4,9 +4,6 @@
     "name": "Tech Talk",
     "createdAt": "2026-04-26T08:36:48.949Z",
     "peers": [
-      "http://localhost:5000",
-      "http://localhost:7301",
-      "http://localhost:7302",
       "http://127.0.0.1:5000",
       "http://127.0.0.1:7301",
       "http://127.0.0.1:7302"
@@ -18,9 +15,6 @@
     "name": "Test123",
     "createdAt": "2026-04-26T08:36:48.956Z",
     "peers": [
-      "http://localhost:5000",
-      "http://localhost:7301",
-      "http://localhost:7302",
       "http://127.0.0.1:5000",
       "http://127.0.0.1:7301",
       "http://127.0.0.1:7302"
@@ -32,9 +26,6 @@
     "name": "Test",
     "createdAt": "2026-04-26T08:36:48.964Z",
     "peers": [
-      "http://localhost:5000",
-      "http://localhost:7301",
-      "http://localhost:7302",
       "http://127.0.0.1:5000",
       "http://127.0.0.1:7301",
       "http://127.0.0.1:7302"
@@ -46,9 +37,6 @@
     "name": "test",
     "createdAt": "2026-04-26T08:36:48.971Z",
     "peers": [
-      "http://localhost:5000",
-      "http://localhost:7301",
-      "http://localhost:7302",
       "http://127.0.0.1:5000",
       "http://127.0.0.1:7301",
       "http://127.0.0.1:7302"
@@ -60,9 +48,6 @@
     "name": "Mamiza Team",
     "createdAt": "2026-04-26T08:36:48.980Z",
     "peers": [
-      "http://localhost:5000",
-      "http://localhost:7301",
-      "http://localhost:7302",
       "http://127.0.0.1:5000",
       "http://127.0.0.1:7301",
       "http://127.0.0.1:7302"
@@ -74,9 +59,6 @@
     "name": "test",
     "createdAt": "2026-04-26T08:36:48.990Z",
     "peers": [
-      "http://localhost:5000",
-      "http://localhost:7301",
-      "http://localhost:7302",
       "http://127.0.0.1:5000",
       "http://127.0.0.1:7301",
       "http://127.0.0.1:7302"
@@ -88,11 +70,8 @@
     "name": "Telegram Room 98453b83-7d37-4a94-a0cf-4358d0cc2d55",
     "createdAt": "2026-04-26T08:36:49.068Z",
     "peers": [
-      "http://localhost:7301",
-      "http://localhost:5000",
-      "http://localhost:7302",
-      "http://127.0.0.1:5000",
       "http://127.0.0.1:7301",
+      "http://127.0.0.1:5000",
       "http://127.0.0.1:7302"
     ],
     "messageCount": 0
@@ -102,11 +81,8 @@
     "name": "Telegram Room 42b2061d-0db2-4220-bb5f-0e3f7c52d887",
     "createdAt": "2026-04-26T08:36:49.093Z",
     "peers": [
-      "http://localhost:7301",
-      "http://localhost:5000",
-      "http://localhost:7302",
-      "http://127.0.0.1:5000",
       "http://127.0.0.1:7301",
+      "http://127.0.0.1:5000",
       "http://127.0.0.1:7302"
     ],
     "messageCount": 0
@@ -128,12 +104,11 @@
     "name": "Test",
     "createdAt": "2026-05-09T08:06:05.583Z",
     "peers": [
-      "http://localhost:5000",
       "http://127.0.0.1:5000",
       "http://127.0.0.1:7301",
       "http://127.0.0.1:7302"
     ],
-    "messageCount": 15
+    "messageCount": 22
   },
   "RBE7PQPP": {
     "roomId": "RBE7PQPP",
@@ -151,7 +126,6 @@
     "name": "r",
     "createdAt": "2026-05-12T15:33:28.504Z",
     "peers": [
-      "http://localhost:5000",
       "http://127.0.0.1:5000",
       "http://127.0.0.1:7301",
       "http://127.0.0.1:7302"
@@ -163,7 +137,6 @@
     "name": "Expwy",
     "createdAt": "2026-05-14T13:08:36.906Z",
     "peers": [
-      "http://localhost:5000",
       "http://127.0.0.1:5000",
       "http://127.0.0.1:7301",
       "http://127.0.0.1:7302"

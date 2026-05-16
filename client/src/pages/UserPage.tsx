@@ -20,7 +20,7 @@ const UserPage = () => {
     const showToast = useShowToast();
     const [posts, setPosts] = useRecoilState(postsAtom);
     const currentUser = useRecoilValue(userAtom);
-    const [fetchingPosts, setFetchingPosts] = useState(true);
+    const [fetchingPosts, setFetchingPosts] = useState(posts.length === 0);
     const [filterType, setFilterType] = useState("posts"); // State for selected tab
 
     // Theme-aware colors
@@ -58,8 +58,7 @@ const UserPage = () => {
     useEffect(() => {
         const getFilteredContent = async () => { // Renamed function
             if (!user) return;
-            setFetchingPosts(true);
-            setPosts([]); // Clear previous posts when filter changes
+            if (posts.length === 0) setFetchingPosts(true);
             let apiUrl = `/api/posts/user/${username}`; // Default to posts
             if (filterType === "replies") {
                 apiUrl = `/api/posts/user/${username}/replies`; // Assuming this endpoint

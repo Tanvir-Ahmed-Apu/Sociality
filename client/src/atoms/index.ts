@@ -75,6 +75,21 @@ export const messagesAtom = atom<any[]>({
 	default: [],
 });
 
+export const notificationsAtom = atom<any[]>({
+	key: 'notificationsAtom',
+	default: [],
+});
+
+export const suggestedUsersAtom = atom<any[]>({
+	key: 'suggestedUsersAtom',
+	default: [],
+});
+
+export const searchResultsAtom = atom<any[]>({
+	key: 'searchResultsAtom',
+	default: [],
+});
+
 /**
  * Theme Atoms
  */

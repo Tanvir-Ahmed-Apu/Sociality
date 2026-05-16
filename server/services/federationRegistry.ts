@@ -12,6 +12,12 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = Number(process.env.FEDERATION_PORT) || 7300;
 
+// Helper to normalize localhost to 127.0.0.1
+const normalizeUrl = (url: string) => {
+  if (!url) return url;
+  return url.replace('//localhost:', '//127.0.0.1:').replace(/\/$/, '');
+};
+
 // Middleware
 app.use(cors());
 app.use(express.json());
@@ -50,11 +56,15 @@ const loadPersistedData = () => {
       const roomsData = JSON.parse(fs.readFileSync(roomsFile, 'utf8'));
       if (typeof roomsData === 'object') {
         Object.entries(roomsData).forEach(([roomId, roomData]: [string, any]) => {
+          // Clean up corrupted duplicate URLs on load
+          const normalizedPeers = new Set(
+            (roomData.peers || []).map((peerUrl: string) => normalizeUrl(peerUrl))
+          );
           rooms.set(roomId, {
             roomId: roomData.roomId,
             name: roomData.name,
             createdAt: new Date(roomData.createdAt || Date.now()),
-            peers: new Set(roomData.peers || []),
+            peers: normalizedPeers,
             messageCount: roomData.messageCount || 0
           });
         });
@@ -116,9 +126,11 @@ app.post('/federation/peers', (req, res) => {
       });
     }
 
+    const normalizedUrl = normalizeUrl(url);
+
     const peerData = {
       name,
-      url,
+      url: normalizedUrl,
       registeredAt: new Date(),
       lastSeen: new Date(),
       status: 'active'
@@ -184,7 +196,10 @@ app.post('/federation/rooms', (req, res) => {
     }
 
     const room = rooms.get(roomId);
-    room.peers.add(peerUrl);
+    
+    // Normalize peerUrl to prevent duplicate registrations (e.g. localhost vs 127.0.0.1)
+    const normalizedUrl = normalizeUrl(peerUrl);
+    room.peers.add(normalizedUrl);
 
     // Ensure all platform peers are included in every room
     const allPlatformUrls = [
@@ -198,7 +213,6 @@ app.post('/federation/rooms', (req, res) => {
     });
 
     persistData(); // Save to disk
-
 
     res.json({
       success: true,
@@ -278,8 +292,9 @@ app.post('/federation/relay-message', async (req, res) => {
     persistData();
 
     // Relay to all peers except the originating platform
+    const normalizedOrigin = normalizeUrl(originatingPlatform);
     const relayPromises = Array.from(room.peers)
-      .filter(peerUrl => peerUrl !== originatingPlatform)
+      .filter(peerUrl => normalizeUrl(peerUrl as string) !== normalizedOrigin)
       .map(async (peerUrl) => {
         try {
           const response = await axios.post(`${peerUrl}/api/cross-platform/relay`, {

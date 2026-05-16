@@ -25,9 +25,12 @@ interface Notification {
   read: boolean;
 }
 
+import { useRecoilState } from "recoil";
+import { notificationsAtom } from "../atoms";
+
 const NotificationsPage = () => {
-  const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [notifications, setNotifications] = useRecoilState(notificationsAtom);
+  const [loading, setLoading] = useState(notifications.length === 0);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const observer = useRef<IntersectionObserver | null>(null);
@@ -63,7 +66,7 @@ const NotificationsPage = () => {
 
   useEffect(() => {
     const fetchNotifications = async () => {
-      setLoading(true);
+      if (notifications.length === 0) setLoading(true);
       try {
         const res = await fetchWithSession(`/api/notifications?page=${page}&limit=10`);
         if (res.ok) {
