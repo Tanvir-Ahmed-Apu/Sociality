@@ -1,9 +1,6 @@
 import { Box, Flex, useColorModeValue } from "@chakra-ui/react";
 import React from "react";
-import Sidebar from "./Sidebar";
-import RightSidebar from "./RightSidebar";
-import BottomNav from "./BottomNav";
-import { Header } from "./index";
+import { LeftSidebar, RightSidebar, BottomNav, Header } from "../navigation";
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -18,7 +15,7 @@ const MainLayout = ({ children, fullWidth = false }: MainLayoutProps) => {
     <Box w="full" minH="100vh" bg={bgColor}>
       {/* Sidebar - Fixed on the left for desktop */}
       <Box display={{ base: "none", lg: "block" }} position="fixed" left="0" top="0" h="100vh" zIndex={100}>
-        <Sidebar />
+        <LeftSidebar />
       </Box>
 
       {/* Main Content Area */}

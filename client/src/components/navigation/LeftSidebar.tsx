@@ -75,7 +75,7 @@ const NavItem = ({ icon: NavIcon, label, to, isActive, isCreate = false, onClick
 };
 
 
-const Sidebar = () => {
+const LeftSidebar = () => {
 
   const user = useRecoilValue(userAtom);
   const location = useLocation();
@@ -241,4 +241,4 @@ const Sidebar = () => {
 
 
 
-export default Sidebar;
+export default LeftSidebar;
