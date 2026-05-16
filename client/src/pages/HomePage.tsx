@@ -18,8 +18,6 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { postsAtom, userAtom } from "../atoms";
 import CreatePost from "../features/post/components/CreatePost";
 import { fetchWithSession, Post as PostType } from "../utils/api";
-import "../components/ui/NoBorderTab.css";
-import "../styles/ResponsiveHomepage.css";
 import FloatingPostButton from "../components/ui/FloatingPostButton";
 
 const HomePage = () => {
@@ -94,7 +92,7 @@ const HomePage = () => {
     };
 
     return (
-        <Box w="full" className="homepage-container">
+        <Box w="full">
             {/* Responsive Container */}
             <Flex
                 direction="column"
@@ -131,7 +129,6 @@ const HomePage = () => {
                                 variant='unstyled'
                                 w="full"
                                 border="none"
-                                className="no-border-tabs"
                             >
                                 <TabList
                                     bg={useColorModeValue("gray.100", "#1a1a1a")}
@@ -152,6 +149,7 @@ const HomePage = () => {
                                             color: useColorModeValue("black", "white"),
                                             boxShadow: "sm"
                                         }}
+                                        _focus={{ outline: "none", boxShadow: "none" }}
                                     >
                                         For you
                                     </Tab>
@@ -167,6 +165,7 @@ const HomePage = () => {
                                             color: useColorModeValue("black", "white"),
                                             boxShadow: "sm"
                                         }}
+                                        _focus={{ outline: "none", boxShadow: "none" }}
                                     >
                                         Following
                                     </Tab>

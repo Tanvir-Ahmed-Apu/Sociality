@@ -3,7 +3,6 @@ import useShowToast from "../hooks/useShowToast";
 import useLogout from "../hooks/useLogout";
 import { useState, useRef } from "react";
 import { SignOut, Trash } from "phosphor-react";
-import "../styles/GradientAnimation.css";
 import { fetchWithSession } from "../utils/api";
 import { ContentCard, ThemeToggle } from "../components/ui";
 
@@ -165,8 +164,7 @@ export const SettingsPage = () => {
 					borderColor={useColorModeValue("gray.200", "rgba(255, 255, 255, 0.1)")}
 					borderWidth="1px"
 					borderRadius="xl"
-					className="glass-card"
-					boxShadow={useColorModeValue("0 8px 32px rgba(0, 0, 0, 0.1)", "0 8px 32px rgba(0, 0, 0, 0.3)")}
+					backdropFilter="blur(10px)"
 				>
 					<AlertDialogHeader fontSize="xl" fontWeight="bold" color={textColor}>
 						Delete Account

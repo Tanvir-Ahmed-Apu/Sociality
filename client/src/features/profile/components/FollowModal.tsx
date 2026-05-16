@@ -22,8 +22,6 @@ import { userAtom } from "../../../atoms";
 import { fetchWithSession, User } from "../../../utils/api";
 import useUserEvents from "../../../hooks/useUserEvents";
 import useShowToast from "../../../hooks/useShowToast";
-import styles from "./FollowModal.module.css";
-
 
 interface FollowModalProps {
     isOpen: boolean;
@@ -411,9 +409,9 @@ const FollowModal = ({ isOpen, onClose, username, onUserUpdate, initialTab = 0 }
 
         if (!followers.length) {
             return (
-                <Box className={styles.emptyState}>
-                    <Text className={styles.emptyStateText}>No followers yet</Text>
-                    <Text className={styles.emptyStateSubtext}>
+                <Box textAlign="center" py={10}>
+                    <Text fontSize="18px" fontWeight={500} mb={2}>No followers yet</Text>
+                    <Text fontSize="14px" color="whiteAlpha.600">
                         When people follow you, they'll appear here.
                     </Text>
                 </Box>
@@ -431,28 +429,39 @@ const FollowModal = ({ isOpen, onClose, username, onUserUpdate, initialTab = 0 }
 
                     return (
                         <div key={user._id || index}>
-                            <div className={styles.userItem}>
-                                <div className={styles.userInfo}>
+                            <Flex
+                                justify="space-between"
+                                align="center"
+                                p="12px 8px"
+                                transition="all 0.2s"
+                                borderRadius="8px"
+                                m="2px 4px"
+                                _hover={{ bg: "rgba(0, 179, 116, 0.05)", transform: "translateY(-1px)" }}
+                            >
+                                <HStack spacing={3}>
                                     <Avatar
                                         size="md"
                                         name={user.username || 'User'}
                                         src={user.profilePic}
                                     />
-                                    <div className={styles.userDetails}>
-                                        <RouterLink
+                                    <Flex direction="column">
+                                        <Box
+                                            as={RouterLink}
                                             to={`/${user.username}`}
-                                            className={styles.username}
+                                            fontWeight={500}
+                                            color="white"
+                                            _hover={{ textDecoration: "underline" }}
                                             onClick={onClose}
                                         >
                                             {user.username || 'Unknown User'}
-                                        </RouterLink>
+                                        </Box>
                                         {user.name && (
-                                            <Text className={styles.name}>
+                                            <Text fontSize="14px" color="whiteAlpha.600">
                                                 {user.name}
                                             </Text>
                                         )}
-                                    </div>
-                                </div>
+                                    </Flex>
+                                </HStack>
 
                                 {currentUser && currentUser._id !== user._id && (
                                     <HStack spacing={2}>
@@ -493,7 +502,7 @@ const FollowModal = ({ isOpen, onClose, username, onUserUpdate, initialTab = 0 }
                                         </Button>
                                     </HStack>
                                 )}
-                            </div>
+                            </Flex>
                             {index < followers.length - 1 && <Box h="12px" />}
                         </div>
                     );
@@ -517,9 +526,9 @@ const FollowModal = ({ isOpen, onClose, username, onUserUpdate, initialTab = 0 }
 
         if (!following.length) {
             return (
-                <Box className={styles.emptyState}>
-                    <Text className={styles.emptyStateText}>Not following anyone</Text>
-                    <Text className={styles.emptyStateSubtext}>
+                <Box textAlign="center" py={10}>
+                    <Text fontSize="18px" fontWeight={500} mb={2}>Not following anyone</Text>
+                    <Text fontSize="14px" color="whiteAlpha.600">
                         When you follow someone, they'll appear here.
                     </Text>
                 </Box>
@@ -534,28 +543,39 @@ const FollowModal = ({ isOpen, onClose, username, onUserUpdate, initialTab = 0 }
                     }
                     return (
                         <div key={user._id || index}>
-                            <div className={styles.userItem}>
-                                <div className={styles.userInfo}>
+                            <Flex
+                                justify="space-between"
+                                align="center"
+                                p="12px 8px"
+                                transition="all 0.2s"
+                                borderRadius="8px"
+                                m="2px 4px"
+                                _hover={{ bg: "rgba(0, 179, 116, 0.05)", transform: "translateY(-1px)" }}
+                            >
+                                <HStack spacing={3}>
                                     <Avatar
                                         size="md"
                                         name={user.username || 'User'}
                                         src={user.profilePic}
                                     />
-                                    <div className={styles.userDetails}>
-                                        <RouterLink
+                                    <Flex direction="column">
+                                        <Box
+                                            as={RouterLink}
                                             to={`/${user.username}`}
-                                            className={styles.username}
+                                            fontWeight={500}
+                                            color="white"
+                                            _hover={{ textDecoration: "underline" }}
                                             onClick={onClose}
                                         >
                                             {user.username || 'Unknown User'}
-                                        </RouterLink>
+                                        </Box>
                                         {user.name && (
-                                            <Text className={styles.name}>
+                                            <Text fontSize="14px" color="whiteAlpha.600">
                                                 {user.name}
                                             </Text>
                                         )}
-                                    </div>
-                                </div>
+                                    </Flex>
+                                </HStack>
 
                                 {currentUser && currentUser._id !== user._id && (
                                     <Button
@@ -585,7 +605,7 @@ const FollowModal = ({ isOpen, onClose, username, onUserUpdate, initialTab = 0 }
                                         Unfollow
                                     </Button>
                                 )}
-                            </div>
+                            </Flex>
                             {index < following.length - 1 && <Box h="12px" />}
                         </div>
                     );
@@ -604,21 +624,59 @@ const FollowModal = ({ isOpen, onClose, username, onUserUpdate, initialTab = 0 }
                 boxShadow="0 10px 30px rgba(0,0,0,0.5)"
                 borderRadius="32px"
             >
-                <ModalHeader className={styles.modalHeader}>
-                    <div className={styles.tabList}>
-                        <div
-                            className={`${styles.tab} ${activeTab === 0 ? styles.tabSelected : ''}`}
+                <ModalHeader p={0} borderBottom="1px solid" borderColor="rgba(0, 179, 116, 0.2)">
+                    <HStack w="full" spacing={0}>
+                        <Box
+                            flex={1}
+                            fontWeight={600}
+                            py={4}
+                            px={1}
+                            position="relative"
+                            textAlign="center"
+                            transition="all 0.2s"
+                            cursor="pointer"
+                            color={activeTab === 0 ? "white" : "whiteAlpha.700"}
+                            _hover={{ color: "white", bg: "rgba(0, 179, 116, 0.05)" }}
                             onClick={() => setActiveTab(0)}
+                            _after={activeTab === 0 ? {
+                                content: '""',
+                                position: "absolute",
+                                bottom: 0,
+                                left: 0,
+                                width: "100%",
+                                height: "2px",
+                                bg: "rgba(0, 179, 116, 0.8)",
+                                boxShadow: "0 0 8px rgba(0, 179, 116, 0.5)"
+                            } : undefined}
                         >
                             Followers
-                        </div>
-                        <div
-                            className={`${styles.tab} ${activeTab === 1 ? styles.tabSelected : ''}`}
+                        </Box>
+                        <Box
+                            flex={1}
+                            fontWeight={600}
+                            py={4}
+                            px={1}
+                            position="relative"
+                            textAlign="center"
+                            transition="all 0.2s"
+                            cursor="pointer"
+                            color={activeTab === 1 ? "white" : "whiteAlpha.700"}
+                            _hover={{ color: "white", bg: "rgba(0, 179, 116, 0.05)" }}
                             onClick={() => setActiveTab(1)}
+                            _after={activeTab === 1 ? {
+                                content: '""',
+                                position: "absolute",
+                                bottom: 0,
+                                left: 0,
+                                width: "100%",
+                                height: "2px",
+                                bg: "rgba(0, 179, 116, 0.8)",
+                                boxShadow: "0 0 8px rgba(0, 179, 116, 0.5)"
+                            } : undefined}
                         >
                             Following
-                        </div>
-                    </div>
+                        </Box>
+                    </HStack>
                 </ModalHeader>
                 <ModalCloseButton
                     top={3}

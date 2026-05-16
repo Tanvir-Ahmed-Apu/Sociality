@@ -3,7 +3,6 @@ import LoginCard from "../features/auth/components/LoginCard";
 import SignupCard from "../features/auth/components/SignupCard";
 import { authScreenAtom } from "../atoms";
 import { Box, HStack, Link, Text, useColorModeValue } from "@chakra-ui/react";
-import "../styles/CyanGradientBackground.css";
 import { useEffect } from "react";
 
 const AuthPage = () => {

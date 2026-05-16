@@ -42,8 +42,6 @@ import usePreviewImg from "../../../hooks/usePreviewImg";
 import { useSocket } from "../../../hooks/useSocket";
 import { memo, useRef, useState, useCallback, useEffect } from "react";
 import { fetchWithSession } from "../../../utils/api";
-import "../../../styles/telegram-input.css";
-import "../../../styles/emoji-picker.css";
 import EmojiPicker from 'emoji-picker-react';
 import { useRecentEmojis } from "../../../hooks/useRecentEmojis";
 import SimpleEmojiPicker from "../../../components/ui/SimpleEmojiPicker";
@@ -758,6 +756,21 @@ const MessageInput = memo(({ setMessages }: MessageInputProps) => {
                         overflow="hidden"
                         color={textColor}
                         _placeholder={{ color: placeholderColor }}
+                        sx={{
+                            '&::-webkit-scrollbar': {
+                                width: '4px',
+                            },
+                            '&::-webkit-scrollbar-track': {
+                                background: 'transparent',
+                            },
+                            '&::-webkit-scrollbar-thumb': {
+                                background: useColorModeValue('rgba(0,0,0,0.2)', 'rgba(255, 255, 255, 0.2)'),
+                                borderRadius: '2px',
+                            },
+                            '&::-webkit-scrollbar-thumb:hover': {
+                                background: useColorModeValue('rgba(0,0,0,0.3)', 'rgba(255, 255, 255, 0.3)'),
+                            }
+                        }}
                     />
                 </Flex>
 
