@@ -1,6 +1,6 @@
 import { Box, Flex, useColorModeValue } from "@chakra-ui/react";
 import React from "react";
-import { LeftSidebar, RightSidebar, BottomNav, Header } from "../navigation";
+import { LeftSidebar, BottomNav, Header } from "../navigation";
 
 interface MainLayoutProps {
   children: React.ReactNode;
