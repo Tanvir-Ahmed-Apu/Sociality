@@ -33,54 +33,47 @@ const HomePage = () => {
     const spinnerColor = useColorModeValue("gray.600", "whiteAlpha.700");
 
     useEffect(() => {
+        // Don't attempt to fetch if no user is authenticated yet.
+        // This prevents a 401 error toast firing before the OAuth callback
+        // has had a chance to set the user state.
+        if (!user) {
+            setLoading(false);
+            return;
+        }
+
         const getFeedPosts = async () => {
             // Only show full-page loading spinner if we have no posts at all (first load)
             if (posts.length === 0) {
                 setLoading(true);
             }
-            
+
             try {
-                let res;
-                if (activeTab === 0) {
-                    // For You feed
-                    res = await fetchWithSession('/api/posts/for-you');
-                } else {
-                    // Following feed
-                    res = await fetchWithSession('/api/posts/following');
-                }
+                const endpoint = activeTab === 0 ? '/api/posts/for-you' : '/api/posts/following';
+                const res = await fetchWithSession(endpoint);
 
                 if (res.ok) {
                     const data = await res.json();
                     if (Array.isArray(data)) {
                         setPosts(data);
                     } else {
-                        showToast("Error", "Invalid data format", "error");
+                        showToast("Error", "Invalid data format received from server.", "error");
                     }
-                } else {
+                } else if (res.status !== 401) {
+                    // Suppress 401 toasts — they are handled globally by the session layer
                     const errorData = await res.json().catch(() => ({ error: 'Failed to fetch posts' }));
                     showToast("Error", errorData.error || 'Failed to fetch posts', "error");
                 }
             } catch (error: any) {
                 console.error('Homepage posts fetch error:', error);
-
-                // Handle different error types
-                if (error.message.includes('401')) {
-                    console.log('Authentication error on homepage, user might need to re-login');
-                    showToast("Info", "Please refresh the page or log in again to see posts", "info");
-                } else {
-                    showToast("Error", error.message || 'Failed to fetch posts', "error");
-                }
+                showToast("Error", error.message || 'Failed to fetch posts', "error");
             } finally {
                 setLoading(false);
             }
         };
 
-        // Small delay for new users who just completed profile setup
-        const delay = user && user.isProfileComplete ? 500 : 0;
-        const timer = setTimeout(getFeedPosts, delay);
-        
+        const timer = setTimeout(getFeedPosts, 0);
         return () => clearTimeout(timer);
-    }, [showToast, setPosts, user, activeTab]); // Added activeTab to dependencies
+    }, [showToast, setPosts, user, activeTab]);
 
     // Handle tab change
     const handleTabChange = (index: number) => {

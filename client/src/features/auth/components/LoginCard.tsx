@@ -83,12 +83,9 @@ export default function LoginCard() {
 			// Set user data in Recoil state
 			setUser(userData);
 
-			// Show success message
-			showToast("Success", "Successfully logged in with Google!", "success");
-
-			// Navigate based on profile completion status
+			// Navigate based on profile completion status (single toast only)
 			if (userData.setupRequired || !userData.isProfileComplete) {
-				showToast("Info", "Welcome! Please complete your profile setup to get started", "info");
+				showToast("Info", "Welcome! Please complete your profile setup to get started.", "info");
 				setTimeout(() => {
 					navigate('/profile-setup', { replace: true });
 				}, 100);

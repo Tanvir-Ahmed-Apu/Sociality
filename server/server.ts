@@ -1,7 +1,6 @@
 import path from "path";
 import express from "express";
 import dotenv from "dotenv";
-import axios from "axios";
 import { fileURLToPath } from 'url'; // Import necessary function
 
 // Explicitly load .env using import.meta.url for reliable path resolution

@@ -1,15 +1,16 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useSetRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 import { userAtom } from '../atoms';
 import useShowToast from './useShowToast';
-import { setCurrentTabUser, getTabId } from '../utils/api';
+import { setCurrentTabUser } from '../utils/api';
 import { handleOAuthCallback, isOAuthCallback } from '../utils/simpleMobileOAuth';
 
 const useOAuthCallback = () => {
     const setUser = useSetRecoilState(userAtom);
     const showToast = useShowToast();
     const navigate = useNavigate();
+    const handledRef = useRef(false);
 
     useEffect(() => {
         const handleCallback = async () => {
@@ -23,6 +24,12 @@ const useOAuthCallback = () => {
                 return;
             }
 
+            // Prevent double execution (React StrictMode fires effects twice in dev)
+            if (handledRef.current) {
+                return;
+            }
+            handledRef.current = true;
+
             try {
                 // Use the mobile-friendly OAuth callback handler
                 const userData = await handleOAuthCallback();
@@ -33,18 +40,14 @@ const useOAuthCallback = () => {
 
                     // Set as current user
                     setUser(userData);
-                    showToast('Success', 'Successfully logged in with Google!', 'success');
 
                     // Check if profile setup is required (only for NEW Google OAuth users)
                     if (userData.setupRequired || !userData.isProfileComplete) {
-                        console.log('❌ FRONTEND: Redirecting to profile setup');
-                        console.log('Reason: setupRequired =', userData.setupRequired, ', isProfileComplete =', userData.isProfileComplete);
-                        showToast('Info', 'Welcome! Please complete your profile setup to get started', 'info');
+                        showToast('Info', 'Welcome! Please complete your profile setup to get started.', 'info');
                         setTimeout(() => {
                             navigate('/profile-setup', { replace: true });
                         }, 100);
                     } else {
-                        console.log('✅ FRONTEND: Redirecting directly to home');
                         showToast('Success', 'Welcome back!', 'success');
                         setTimeout(() => {
                             navigate('/', { replace: true });

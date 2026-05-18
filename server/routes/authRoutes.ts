@@ -1,7 +1,6 @@
 import express from 'express';
 import passport from '../config/passport.js';
 import generateTokenAndSetCookie from '../utils/helpers/generateTokenAndSetCookie.js';
-import { findDuplicateUsers, findAllDuplicateEmails } from '../utils/userDebug.js';
 
 const router = express.Router();
 
@@ -114,39 +113,6 @@ router.get('/oauth/user', async (req: any, res: any) => {
     } catch (error) {
         console.error('OAuth user fetch error:', error);
         res.status(500).json({ error: 'Failed to fetch user data' });
-    }
-});
-
-// Debug routes (remove in production)
-router.get('/debug/cookies', (req, res) => {
-    const sessionPath = (req.query.session as string) || '';
-    const cookieName = sessionPath ? `jwt-sociality${sessionPath.replace(/\//g, '-')}` : 'jwt-sociality';
-    const token = req.cookies[cookieName] || req.cookies.jwt || req.cookies['jwt-sociality'];
-
-    res.json({
-        sessionPath,
-        cookieName,
-        hasToken: !!token,
-        allCookies: Object.keys(req.cookies),
-        cookieValues: req.cookies
-    });
-});
-
-router.get('/debug/duplicates/:email', async (req, res) => {
-    try {
-        const users = await findDuplicateUsers(req.params.email);
-        res.json({ email: req.params.email, users, count: users.length });
-    } catch (error: any) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-router.get('/debug/all-duplicates', async (req, res) => {
-    try {
-        const duplicates = await findAllDuplicateEmails();
-        res.json({ duplicates, count: duplicates.length });
-    } catch (error: any) {
-        res.status(500).json({ error: error.message });
     }
 });
 
