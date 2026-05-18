@@ -7,13 +7,6 @@ import { BrowserRouter } from "react-router-dom";
 import { RecoilRoot } from "recoil";
 import { SocketContextProvider } from "./context/SocketContext";
 import theme from "./theme";
-import { setupResizeAnimationStopper } from "./utils/performanceUtils";
-
-// Set up performance optimizations
-document.addEventListener('DOMContentLoaded', () => {
-  // Set up resize animation stopper to prevent layout thrashing during resize
-  setupResizeAnimationStopper();
-});
 
 // Enable HMR for atoms
 if ((import.meta as any).hot) {

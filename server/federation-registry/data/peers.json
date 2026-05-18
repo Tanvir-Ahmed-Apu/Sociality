@@ -2,22 +2,22 @@
   {
     "name": "telegram",
     "url": "http://127.0.0.1:7301",
-    "registeredAt": "2026-05-16T03:38:30.883Z",
-    "lastSeen": "2026-05-16T03:38:30.883Z",
+    "registeredAt": "2026-05-16T05:18:20.631Z",
+    "lastSeen": "2026-05-16T05:18:20.631Z",
     "status": "active"
   },
   {
     "name": "sociality",
     "url": "http://127.0.0.1:5000",
-    "registeredAt": "2026-05-16T03:38:30.890Z",
-    "lastSeen": "2026-05-16T03:38:30.890Z",
+    "registeredAt": "2026-05-16T05:18:20.635Z",
+    "lastSeen": "2026-05-16T05:18:20.635Z",
     "status": "active"
   },
   {
     "name": "discord",
     "url": "http://127.0.0.1:7302",
-    "registeredAt": "2026-05-16T03:38:31.873Z",
-    "lastSeen": "2026-05-16T03:38:31.873Z",
+    "registeredAt": "2026-05-16T05:18:21.621Z",
+    "lastSeen": "2026-05-16T05:18:21.621Z",
     "status": "active"
   }
 ]

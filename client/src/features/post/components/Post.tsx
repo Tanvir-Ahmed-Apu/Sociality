@@ -4,7 +4,7 @@ import { useState, useCallback, useMemo, memo } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { userAtom, postsAtom } from "../../../atoms";
 import useShowToast from "../../../hooks/useShowToast";
-import { markPostNotInterested } from "../../../utils/api";
+import { fetchWithSession, Post as PostType } from "../../../utils/api";
 
 // Import smaller components
 import PostHeader from "./PostHeader";
@@ -14,7 +14,6 @@ import CommentsSection from "./CommentsSection";
 import ShowCommentsButton from "./ShowCommentsButton";
 import Actions from "./Actions";
 import PostReplyInput from "./PostReplyInput";
-import { fetchWithSession, Post as PostType } from "../../../utils/api";
 
 /**
  * Post component
@@ -96,8 +95,8 @@ const Post = memo(({ post, showComments = false, isPostPage = false, highlightRe
     e.stopPropagation();
 
     try {
-      // Call API to mark post as not interested using the utility function
-      await markPostNotInterested(post._id);
+      // Call API to mark post as not interested
+      await fetchWithSession(`/api/posts/not-interested/${post._id}`, { method: 'POST' });
 
       // Remove post from current feed
       setPosts(posts.filter((p) => p._id !== post._id));

@@ -43,7 +43,6 @@ import passport from "./config/passport.js"; // Import passport configuration
 
 import { v2 as cloudinary } from "cloudinary";
 import { app, server } from "./socket/socket.js";
-import job from "./cron/cron.js";
 import logger from "./utils/logger.js";
 import axios from "axios";
 
@@ -57,7 +56,7 @@ console.log("🚀 Starting backend server...");
 console.log("📅 Connecting to MongoDB...");
 await connectDB();
 console.log("✅ MongoDB Connected");
-job.start();
+
 
 const PORT = Number(process.env.PORT) || 5000;
 

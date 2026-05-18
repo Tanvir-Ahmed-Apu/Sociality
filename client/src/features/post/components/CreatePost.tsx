@@ -30,9 +30,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { userAtom, postsAtom } from "../../../atoms";
 import useShowToast from "../../../hooks/useShowToast";
 import { useParams } from "react-router-dom";
-import { fetchWithSession } from "../../../utils/api";
-
-import { Post } from "../../../utils/api";
+import { Post, fetchWithSession } from "../../../utils/api";
 
 const MAX_CHAR = 500;
 
