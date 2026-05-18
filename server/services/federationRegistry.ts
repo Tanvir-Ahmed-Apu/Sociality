@@ -1,13 +1,9 @@
 import express from 'express';
 import cors from 'cors';
 import axios from 'axios';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
 import logger from '../utils/logger.js';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import FederationPeer from '../models/federationPeerModel.js';
+import FederationRoom from '../models/federationRoomModel.js';
 
 const app = express();
 const PORT = Number(process.env.FEDERATION_PORT) || 7300;
@@ -22,100 +18,25 @@ const normalizeUrl = (url: string) => {
 app.use(cors());
 app.use(express.json());
 
-// Persistent storage for peers and rooms
-const dataDir = path.join(__dirname, '../federation-registry/data');
-const peersFile = path.join(dataDir, 'peers.json');
-const roomsFile = path.join(dataDir, 'rooms.json');
-
-// Create data directory if it doesn't exist
-if (!fs.existsSync(dataDir)) {
-  fs.mkdirSync(dataDir, { recursive: true });
-}
-
-// Initialize storage objects
-let peers: Map<string, any> = new Map();
-let rooms: Map<string, any> = new Map();
-
-// Load persisted data
-const loadPersistedData = () => {
-  try {
-    if (fs.existsSync(peersFile)) {
-      const peersData = JSON.parse(fs.readFileSync(peersFile, 'utf8'));
-      if (Array.isArray(peersData)) {
-        peersData.forEach(peer => {
-          peers.set(peer.name, peer);
-        });
-      }
-    }
-  } catch (error: any) {
-    console.warn('⚠️ Failed to load persisted peers:', error.message);
-  }
-
-  try {
-    if (fs.existsSync(roomsFile)) {
-      const roomsData = JSON.parse(fs.readFileSync(roomsFile, 'utf8'));
-      if (typeof roomsData === 'object') {
-        Object.entries(roomsData).forEach(([roomId, roomData]: [string, any]) => {
-          // Clean up corrupted duplicate URLs on load
-          const normalizedPeers = new Set(
-            (roomData.peers || []).map((peerUrl: string) => normalizeUrl(peerUrl))
-          );
-          rooms.set(roomId, {
-            roomId: roomData.roomId,
-            name: roomData.name,
-            createdAt: new Date(roomData.createdAt || Date.now()),
-            peers: normalizedPeers,
-            messageCount: roomData.messageCount || 0
-          });
-        });
-      }
-    }
-  } catch (error: any) {
-    console.warn('⚠️ Failed to load persisted rooms:', error.message);
-  }
-};
-
-// Save data to persistent storage
-const persistData = () => {
-  try {
-    // Save peers
-    const peersArray = Array.from(peers.values());
-    fs.writeFileSync(peersFile, JSON.stringify(peersArray, null, 2));
-
-    // Save rooms
-    const roomsObject = {};
-    rooms.forEach((room, roomId) => {
-      roomsObject[roomId] = {
-        roomId: room.roomId,
-        name: room.name,
-        createdAt: room.createdAt,
-        peers: Array.from(room.peers),
-        messageCount: room.messageCount
-      };
-    });
-    fs.writeFileSync(roomsFile, JSON.stringify(roomsObject, null, 2));
-
-  } catch (error: any) {
-    console.error('❌ Failed to persist data:', error.message);
-  }
-};
-
-// Load data on startup
-loadPersistedData();
-
 // Health check
-app.get('/health', (req: any, res: any) => {
-  res.json({
-    status: 'ok',
-    service: 'federation-registry',
-    timestamp: new Date().toISOString(),
-    peers: peers.size,
-    rooms: rooms.size
-  });
+app.get('/health', async (req: any, res: any) => {
+  try {
+    const peerCount = await FederationPeer.countDocuments();
+    const roomCount = await FederationRoom.countDocuments();
+    res.json({
+      status: 'ok',
+      service: 'federation-registry',
+      timestamp: new Date().toISOString(),
+      peers: peerCount,
+      rooms: roomCount
+    });
+  } catch (error) {
+    res.status(500).json({ status: 'error', message: 'Database error' });
+  }
 });
 
 // Register a peer platform
-app.post('/federation/peers', (req, res) => {
+app.post('/federation/peers', async (req, res) => {
   try {
     const { name, url } = req.body;
 
@@ -128,17 +49,16 @@ app.post('/federation/peers', (req, res) => {
 
     const normalizedUrl = normalizeUrl(url);
 
-    const peerData = {
-      name,
-      url: normalizedUrl,
-      registeredAt: new Date(),
-      lastSeen: new Date(),
-      status: 'active'
-    };
-
-    peers.set(name, peerData);
-    persistData(); // Save to disk
-
+    const peerData = await FederationPeer.findOneAndUpdate(
+      { name },
+      {
+        name,
+        url: normalizedUrl,
+        lastSeen: new Date(),
+        status: 'active'
+      },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    );
 
     res.json({
       success: true,
@@ -156,9 +76,9 @@ app.post('/federation/peers', (req, res) => {
 });
 
 // Get all registered peers
-app.get('/federation/peers', (req, res) => {
+app.get('/federation/peers', async (req, res) => {
   try {
-    const peerList = Array.from(peers.values());
+    const peerList = await FederationPeer.find({}).lean();
     res.json({
       success: true,
       peers: peerList
@@ -174,7 +94,7 @@ app.get('/federation/peers', (req, res) => {
 });
 
 // Register a room
-app.post('/federation/rooms', (req, res) => {
+app.post('/federation/rooms', async (req, res) => {
   try {
     const { roomId, name, peerUrl } = req.body;
 
@@ -185,21 +105,7 @@ app.post('/federation/rooms', (req, res) => {
       });
     }
 
-    if (!rooms.has(roomId)) {
-      rooms.set(roomId, {
-        roomId,
-        name,
-        createdAt: new Date(),
-        peers: new Set(),
-        messageCount: 0
-      });
-    }
-
-    const room = rooms.get(roomId);
-    
-    // Normalize peerUrl to prevent duplicate registrations (e.g. localhost vs 127.0.0.1)
     const normalizedUrl = normalizeUrl(peerUrl);
-    room.peers.add(normalizedUrl);
 
     // Ensure all platform peers are included in every room
     const allPlatformUrls = [
@@ -207,12 +113,17 @@ app.post('/federation/rooms', (req, res) => {
       'http://127.0.0.1:7301',  // telegram
       'http://127.0.0.1:7302'   // discord
     ];
+    
+    const peersToAdd = new Set([normalizedUrl, ...allPlatformUrls]);
 
-    allPlatformUrls.forEach(url => {
-      room.peers.add(url);
-    });
-
-    persistData(); // Save to disk
+    const room = await FederationRoom.findOneAndUpdate(
+      { roomId },
+      {
+        $setOnInsert: { name, roomId, messageCount: 0 },
+        $addToSet: { peers: { $each: Array.from(peersToAdd) } }
+      },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    );
 
     res.json({
       success: true,
@@ -220,7 +131,7 @@ app.post('/federation/rooms', (req, res) => {
       room: {
         roomId: room.roomId,
         name: room.name,
-        peers: Array.from(room.peers),
+        peers: room.peers,
         messageCount: room.messageCount
       }
     });
@@ -235,15 +146,17 @@ app.post('/federation/rooms', (req, res) => {
 });
 
 // Get all rooms
-app.get('/federation/rooms', (req, res) => {
+app.get('/federation/rooms', async (req, res) => {
   try {
-    const roomList = Array.from(rooms.values()).map(room => ({
+    const rooms = await FederationRoom.find({}).lean();
+    
+    const roomList = rooms.map(room => ({
       roomId: room.roomId,
       name: room.name,
       createdAt: room.createdAt,
-      peers: Array.from(room.peers),
+      peers: room.peers || [],
       messageCount: room.messageCount,
-      participantCount: room.peers.size
+      participantCount: (room.peers || []).length
     }));
 
     res.json(roomList);
@@ -269,33 +182,31 @@ app.post('/federation/relay-message', async (req, res) => {
       });
     }
 
-    let room = rooms.get(roomId);
+    let room = await FederationRoom.findOne({ roomId });
     if (!room) {
       // Auto-create room if it doesn't exist
-      room = {
+      room = await FederationRoom.create({
         roomId,
         name: `Auto-created Room ${roomId}`,
-        createdAt: new Date(),
-        peers: new Set([
+        peers: [
           'http://127.0.0.1:5000',  // sociality
           'http://127.0.0.1:7301',  // telegram
           'http://127.0.0.1:7302'   // discord
-        ]),
+        ],
         messageCount: 0
-      };
-      rooms.set(roomId, room);
-      persistData(); // Save the new room
+      });
     }
 
-    // Increment message count and persist
-    room.messageCount++;
-    persistData();
+    // Increment message count
+    room.messageCount += 1;
+    await room.save();
 
     // Relay to all peers except the originating platform
     const normalizedOrigin = normalizeUrl(originatingPlatform);
-    const relayPromises = Array.from(room.peers)
-      .filter(peerUrl => normalizeUrl(peerUrl as string) !== normalizedOrigin)
-      .map(async (peerUrl) => {
+    const peers = room.peers || [];
+    const relayPromises = peers
+      .filter((peerUrl: string) => normalizeUrl(peerUrl) !== normalizedOrigin)
+      .map(async (peerUrl: string) => {
         try {
           const response = await axios.post(`${peerUrl}/api/cross-platform/relay`, {
             roomId,
@@ -338,7 +249,6 @@ app.post('/federation/relay-message', async (req, res) => {
       }
     );
 
-
     res.json({
       success: true,
       message: 'Message relayed to peers',
@@ -356,14 +266,13 @@ app.post('/federation/relay-message', async (req, res) => {
 });
 
 // Remove inactive peers (cleanup endpoint)
-app.delete('/federation/peers/:name', (req, res) => {
+app.delete('/federation/peers/:name', async (req, res) => {
   try {
     const { name } = req.params;
 
-    if (peers.has(name)) {
-      peers.delete(name);
-      persistData(); // Save changes to disk
+    const result = await FederationPeer.deleteOne({ name });
 
+    if (result.deletedCount > 0) {
       res.json({
         success: true,
         message: `Peer ${name} removed successfully`
@@ -385,10 +294,10 @@ app.delete('/federation/peers/:name', (req, res) => {
 });
 
 // Add endpoint to get room peers for debugging
-app.get('/federation/rooms/:roomId/peers', (req, res) => {
+app.get('/federation/rooms/:roomId/peers', async (req, res) => {
   try {
     const { roomId } = req.params;
-    const room = rooms.get(roomId);
+    const room = await FederationRoom.findOne({ roomId }).lean();
 
     if (!room) {
       return res.status(404).json({
@@ -401,7 +310,7 @@ app.get('/federation/rooms/:roomId/peers', (req, res) => {
       success: true,
       roomId: room.roomId,
       name: room.name,
-      peers: Array.from(room.peers),
+      peers: room.peers || [],
       messageCount: room.messageCount
     });
   } catch (error: any) {
@@ -415,25 +324,20 @@ app.get('/federation/rooms/:roomId/peers', (req, res) => {
 });
 
 // Ensure all platforms are registered in all existing rooms
-const ensureAllPlatformsInRooms = () => {
-  const allPlatformUrls = [
-    'http://127.0.0.1:5000',  // sociality
-    'http://127.0.0.1:7301',  // telegram
-    'http://127.0.0.1:7302'   // discord
-  ];
+const ensureAllPlatformsInRooms = async () => {
+  try {
+    const allPlatformUrls = [
+      'http://127.0.0.1:5000',  // sociality
+      'http://127.0.0.1:7301',  // telegram
+      'http://127.0.0.1:7302'   // discord
+    ];
 
-  let roomsUpdated = false;
-  rooms.forEach((room, roomId) => {
-    allPlatformUrls.forEach(url => {
-      if (!room.peers.has(url)) {
-        room.peers.add(url);
-        roomsUpdated = true;
-      }
-    });
-  });
-
-  if (roomsUpdated) {
-    persistData();
+    await FederationRoom.updateMany(
+      {},
+      { $addToSet: { peers: { $each: allPlatformUrls } } }
+    );
+  } catch (error) {
+    console.error('Error ensuring platforms in rooms:', error);
   }
 };
 
@@ -444,8 +348,6 @@ const startFederationRegistry = () => {
 
     // Ensure all platforms are in all rooms
     ensureAllPlatformsInRooms();
-
-    // Log current state
   });
 };
 
