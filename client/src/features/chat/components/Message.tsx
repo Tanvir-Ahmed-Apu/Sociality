@@ -281,7 +281,7 @@ const Message = React.memo(({ ownMessage, message, onDelete, onStar }: MessagePr
       <Modal isOpen={showImageModal} onClose={() => setShowImageModal(false)} isCentered size="4xl">
         <ModalOverlay bg="blackAlpha.800" />
         <ModalContent bg="transparent" boxShadow="none" maxW="90vw" maxH="90vh">
-          <ModalBody p={0} display="flex" flexDirection="column" align="center" justify="center">
+          <ModalBody p={0} display="flex" flexDirection="column" alignItems="center" justifyContent="center">
             <Box position="relative">
               {isImageLoading && <Spinner size="xl" color="white" position="absolute" top="50%" left="50%" ml="-24px" mt="-24px" />}
               <Image src={currentImage} maxH="80vh" objectFit="contain" transform={`scale(${zoomLevel})`} transition="transform 0.2s" onLoad={() => setIsImageLoading(false)} />

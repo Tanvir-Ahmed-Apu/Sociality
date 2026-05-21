@@ -35,7 +35,7 @@ import { fetchWithSession } from "../../../utils/api";
 
 // Simple debounce function to prevent multiple rapid clicks
 const useDebounce = (callback: (...args: any[]) => void, delay = 300) => {
-	const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+	const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
 	return useCallback((...args: any[]) => {
 		if (timeoutRef.current) {

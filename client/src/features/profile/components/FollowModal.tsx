@@ -15,6 +15,7 @@ import {
     Box,
     Spinner,
     Center,
+    Flex,
 } from "@chakra-ui/react";
 import { Link as RouterLink } from "react-router-dom";
 import { useRecoilValue, useSetRecoilState } from "recoil";

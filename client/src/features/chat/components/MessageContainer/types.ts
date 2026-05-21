@@ -6,7 +6,7 @@ export interface MessageType {
 	fileName?: string;
 	fileSize?: number;
 	attachmentType?: string;
-	sender: string;
+	sender: any;
 	senderUsername?: string;
 	senderPlatform?: string;
 	createdAt?: string;

@@ -228,7 +228,6 @@ const MessageInput = memo(({ setMessages }: MessageInputProps) => {
                         onEmojiClick={(emojiData: any) => {
                             setMessageText(prev => prev + emojiData.emoji);
                         }} 
-                        onClose={onEmojiClose}
                     />
                 </Box>
             )}
