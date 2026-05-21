@@ -4,7 +4,7 @@ import {
 } from "@chakra-ui/react";
 import { BsFileEarmarkFill } from "react-icons/bs";
 import { FaMicrophone, FaPlay, FaPause } from "react-icons/fa";
-import { formatTime } from "../../utils/timeUtils";
+import { formatTime } from "../../../utils/timeUtils";
 
 interface MessageContentProps {
   message: any;

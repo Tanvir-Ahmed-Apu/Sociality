@@ -1,9 +1,9 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import { useToast } from '@chakra-ui/react';
-import { userAtom } from '../../../../atoms';
-import { fetchWithSession } from '../../../../utils/api';
-import { useShowToast } from '../../../../hooks';
+import { userAtom } from '../../../../../atoms';
+import { fetchWithSession } from '../../../../../utils/api';
+import { useShowToast } from '../../../../../hooks';
 
 export const useGroupSettings = (selectedConversation: any, isOpen: boolean, onClose: () => void, onUpdateGroup?: (group: any) => void, onDeleteGroup?: (group: any) => void) => {
   const [isEditing, setIsEditing] = useState(false);

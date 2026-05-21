@@ -8,8 +8,8 @@ import {
 import { BsCheck2All, BsCheck2, BsThreeDotsVertical, BsClock, BsStar, BsStarFill } from "react-icons/bs";
 import { FaTrash, FaTelegram, FaDiscord, FaGlobe } from "react-icons/fa";
 import { useRecoilValue } from "recoil";
-import { selectedConversationAtom } from "../../../atoms";
-import { formatMessageTime } from "../utils/timeUtils";
+import { selectedConversationAtom } from "../../../../atoms";
+import { formatMessageTime } from "../../utils/timeUtils";
 import { useAudioPlayer } from "./hooks/useAudioPlayer";
 import { ImageModal } from "./components/ImageModal";
 import { MessageContent } from "./components/MessageContent";
