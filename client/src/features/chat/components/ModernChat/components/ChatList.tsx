@@ -2,47 +2,12 @@ import React from 'react';
 import {
   Box, Flex, VStack, HStack, Text, Input, InputGroup, InputLeftElement,
   Avatar, AvatarBadge, IconButton, Icon, Badge,
-  useColorModeValue, Heading, Skeleton, SkeletonCircle,
-  Switch, Tooltip, Divider
+  useColorModeValue, Heading, Skeleton, SkeletonCircle, Tooltip
 } from '@chakra-ui/react';
 import { FiSearch, FiPlus, FiMessageSquare } from 'react-icons/fi';
 import { FaGlobe, FaTelegram, FaDiscord } from "react-icons/fa";
-import { useRecoilValue } from 'recoil';
-import { userAtom } from '../../../atoms';
-import MessageContainer from "./MessageContainer";
 
-const WorkspaceRail = () => {
-  const railBg = useColorModeValue('white', '#000000');
-  const borderColor = useColorModeValue('gray.100', 'whiteAlpha.100');
-
-  return (
-    <VStack 
-      w="2px" h="full" bg={railBg} py={1} spacing={2} align="center" 
-      flexShrink={0}
-      display={{ base: "none", md: "flex" }}
-      borderRight="1px solid"
-      borderColor={borderColor}
-    >
-      <Box flex={1} />
-    </VStack>
-  );
-};
-
-const RightRail = () => {
-  const railBg = useColorModeValue('white', '#000000');
-  const borderColor = useColorModeValue('gray.100', 'whiteAlpha.100');
-
-  return (
-    <VStack 
-      w="60px" h="full" bg={railBg} flexShrink={0}
-      display={{ base: "none", md: "block" }}
-      borderLeft="1px solid"
-      borderColor={borderColor}
-    />
-  );
-};
-
-const ChatList = ({
+export const ChatList = ({
   currentUser,
   conversations,
   federatedRooms,
@@ -143,7 +108,6 @@ const ChatList = ({
           </HStack>
         </Flex>
 
-        {/* Messaging Mode Switch - Premium Segmented Control */}
         <Box px={1} mb={6}>
           <Flex 
             bg={segmentedControlBg} 
@@ -194,7 +158,6 @@ const ChatList = ({
             </Flex>
           </Flex>
         </Box>
-
 
         <Flex justify="space-between" align="center" mb={4}>
           <Text fontSize="xs" fontWeight="700" color={mutedColor} letterSpacing="1px">
@@ -261,7 +224,7 @@ const ChatList = ({
                   name={displayName}
                 >
                   {!isCrossPlatformMode && (
-                    <AvatarBadge boxSize="1.2em" bg={onlineUsers.includes(participant?._id) ? 'green.400' : 'gray.600'} border="2px solid" borderColor={bgColor} />
+                    <AvatarBadge boxSize="1.2em" bg={onlineUsers?.includes(participant?._id) ? 'green.400' : 'gray.600'} border="2px solid" borderColor={bgColor} />
                   )}
                 </Avatar>
                 {isCrossPlatformMode && (
@@ -302,143 +265,3 @@ const ChatList = ({
     </VStack>
   );
 };
-
-const ModernChat = ({
-  conversations,
-  federatedRooms,
-  isCrossPlatformMode,
-  selectedConversation,
-  setSelectedConversation,
-  loading,
-  searchText,
-  setSearchText,
-  onToggleMode,
-  onShowCreateRoom,
-  onShowJoinRoom,
-  onShareRoom,
-  onDeleteRoom,
-  onlineUsers
-}: any) => {
-  const currentUser = useRecoilValue(userAtom);
-  const mainBg = useColorModeValue('gray.50', '#000000');
-  const cardBg = useColorModeValue('white', 'rgba(255, 255, 255, 0.02)');
-  const cardBorder = useColorModeValue('gray.200', 'whiteAlpha.100');
-  const shadowColor = useColorModeValue('rgba(0, 0, 0, 0.05)', 'rgba(0, 0, 0, 0.4)');
-  const textColor = useColorModeValue('black', 'white');
-  const glassBg = useColorModeValue('rgba(255, 255, 255, 0.8)', 'rgba(255, 255, 255, 0.02)');
-  const badgeBg = useColorModeValue('blackAlpha.100', 'whiteAlpha.100');
-  const badgeColor = useColorModeValue('blackAlpha.700', 'whiteAlpha.700');
-  const scrollbarThumb = useColorModeValue('rgba(0,0,0,0.1)', 'rgba(255, 255, 255, 0.1)');
-  const scrollbarThumbHover = useColorModeValue('rgba(0,0,0,0.2)', 'rgba(255, 255, 255, 0.2)');
-
-  return (
-    <Flex h="100vh" w="full" overflow="hidden" fontFamily="'Inter', sans-serif" bg={mainBg} p={{ base: 0, md: 4 }} gap={{ base: 0, md: 4 }}>
-      <WorkspaceRail />
-
-      {/* Left Card: Chat List */}
-      <Flex 
-        w={{ base: "full", md: "350px" }} 
-        h="full" 
-        bg={cardBg} 
-        backdropFilter="blur(30px)" 
-        borderRadius={{ base: "0px", md: "32px" }}
-        border="1px solid" 
-        borderColor={cardBorder}
-        overflow="hidden"
-        boxShadow={`0 20px 50px ${shadowColor}`}
-        flexShrink={0}
-        display={{ base: selectedConversation?._id ? "none" : "flex", md: "flex" }}
-      >
-        <ChatList
-          currentUser={currentUser}
-          conversations={conversations}
-          federatedRooms={federatedRooms}
-          isCrossPlatformMode={isCrossPlatformMode}
-          selectedConversation={selectedConversation}
-          setSelectedConversation={setSelectedConversation}
-          loading={loading}
-          searchText={searchText}
-          setSearchText={setSearchText}
-          onToggleMode={onToggleMode}
-          onShowCreateRoom={onShowCreateRoom}
-          onShowJoinRoom={onShowJoinRoom}
-          onlineUsers={onlineUsers}
-        />
-      </Flex>
-
-      {/* Right Card: Message Content */}
-      <Flex 
-        flex={1} 
-        h="full" 
-        bg={cardBg} 
-        backdropFilter="blur(30px)" 
-        borderRadius={{ base: "0px", md: "32px" }}
-        border="1px solid" 
-        borderColor={cardBorder}
-        overflow="hidden"
-        boxShadow={`0 20px 50px ${shadowColor}`}
-        position="relative"
-      >
-        <Flex direction="column" flex={1} h="full" position="relative" bg="transparent">
-          {selectedConversation?._id ? (
-            <MessageContainer onShareRoom={onShareRoom} onDeleteRoom={onDeleteRoom} />
-          ) : (
-            <Flex 
-              direction="column" align="center" justify="center" h="full"
-              bgGradient={useColorModeValue(
-                "radial(circle at 50% 50%, rgba(0, 179, 116, 0.03) 0%, transparent 100%)",
-                "radial(circle at 50% 50%, rgba(255, 255, 255, 0.03) 0%, transparent 100%)"
-              )}
-              position="relative"
-              overflow="hidden"
-            >
-              {/* Decorative Floating Elements */}
-              <Box position="absolute" top="-10%" left="-10%" w="40%" h="40%" bg="brand.primary.500" filter="blur(150px)" opacity="0.05" borderRadius="full" />
-              <Box position="absolute" bottom="-10%" right="-10%" w="40%" h="40%" bg="blue.500" filter="blur(150px)" opacity="0.05" borderRadius="full" />
-              
-              <VStack spacing={8} zIndex={1}>
-                <Box 
-                  p={12} 
-                  borderRadius="50px" 
-                  bg={glassBg} 
-                  border="1px solid" 
-                  borderColor={cardBorder}
-                  backdropFilter="blur(30px)"
-                  boxShadow={`0 30px 60px ${shadowColor}`}
-                  position="relative"
-                >
-                  <Icon as={FiMessageSquare} boxSize={20} color="brand.primary.500" filter="drop-shadow(0 0 20px rgba(0, 179, 116, 0.3))" />
-                  <Box position="absolute" top="-5px" right="-5px" w="15px" h="15px" bg="brand.primary.500" borderRadius="full" boxShadow="0 0 10px #00B374" />
-                </Box>
-                <VStack spacing={4}>
-                  <Heading size="xl" color={textColor} fontWeight="900" letterSpacing="-1px">Sociality Messaging</Heading>
-                  <Text color="gray.500" fontWeight="500" fontSize="lg" textAlign="center" maxW="400px" lineHeight="tall">
-                    Your hub for direct and cross-platform conversations. Select a contact to begin.
-                  </Text>
-                </VStack>
-                <Box pt={4}>
-                  <Badge variant="subtle" colorScheme="brand" px={4} py={1} borderRadius="full" textTransform="none" fontSize="xs" bg={badgeBg} color="brand.primary.500" border="1px solid" borderColor="brand.primary.500">
-                    Ready to connect
-                  </Badge>
-                </Box>
-              </VStack>
-            </Flex>
-          )}
-        </Flex>
-      </Flex>
-
-      <RightRail />
-
-      <style>{`
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: ${scrollbarThumb}; border-radius: 10px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: ${scrollbarThumbHover}; }
-        .hide-scrollbar::-webkit-scrollbar { display: none; }
-        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-      `}</style>
-    </Flex>
-  );
-};
-
-export default ModernChat;
