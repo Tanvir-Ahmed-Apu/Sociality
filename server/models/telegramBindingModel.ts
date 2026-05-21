@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const telegramBindingSchema = mongoose.Schema(
+const telegramBindingSchema = new mongoose.Schema(
   {
     roomId: {
       type: String,
