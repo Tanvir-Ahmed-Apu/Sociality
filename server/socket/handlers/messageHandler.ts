@@ -1,7 +1,7 @@
 import { Server, Socket } from "socket.io";
-import Message from "../../../models/messageModel.js";
-import Conversation from "../../../models/conversationModel.js";
-import logger from "../../../utils/logger.js";
+import Message from "../../models/messageModel.js";
+import Conversation from "../../models/conversationModel.js";
+import logger from "../../utils/logger.js";
 import { getMessageTypeText, isMockConversationId, isValidObjectId } from "../utils.js";
 import { getAllSocketIdsForUser } from "../state.js";
 import { sendMessageToUser } from "../emitters.js";

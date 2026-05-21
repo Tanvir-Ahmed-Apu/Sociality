@@ -1,5 +1,6 @@
 import Room from "../../models/roomModel.js";
 import CrossPlatformMessage from "../../models/crossPlatformMessageModel.js";
+import mongoose from "mongoose";
 import { getRoomByIdOrRoomId } from "../crossPlatformHelpers.js";
 import { roomFederationService } from "./roomFederationService.js";
 import { RoomResponse, RoomDetailsResponse, ParticipantInfo, ParticipantsResponse } from "../../types/crossPlatformRoom.js";
@@ -19,11 +20,11 @@ export class RoomParticipantService {
 
     return userRooms.map(room => ({
       roomId: room.roomId,
-      roomCode: room.roomCode,
+      roomCode: room.roomCode || "",
       name: room.name,
       groupPhoto: room.groupPhoto,
       creator: room.creator,
-      peers: room.federationSettings.registeredPeers || [],
+      peers: room.federationSettings?.registeredPeers || [],
       participantCount: room.participants?.length || 0,
       isPrivate: room.settings?.isPrivate || false,
       lastActivity: room.lastActivity
@@ -47,7 +48,7 @@ export class RoomParticipantService {
 
     const existingParticipant = room.participants.find((p: any) => p.user.toString() === userId.toString());
     if (!existingParticipant) {
-      room.participants.push({ user: userId, role: 'member' });
+      room.participants.push({ user: new mongoose.Types.ObjectId(userId), role: 'member', joinedAt: new Date() });
       await room.save();
     }
 
@@ -80,19 +81,22 @@ export class RoomParticipantService {
     }
 
     return {
-      _id: room._id,
+      _id: room._id.toString(),
       roomId: room.roomId,
-      roomCode: room.roomCode,
+      roomCode: room.roomCode || "",
+      isPrivate: room.settings?.isPrivate || false,
       name: room.name,
       groupPhoto: room.groupPhoto,
       participantCount: room.participants.filter((p: any) => p && p.user).length,
       participants: room.participants
         .filter((p: any) => p && p.user)
         .map((p: any) => ({
-          _id: p.user._id,
+          id: p.user._id.toString(),
           username: p.user.username,
           name: p.user.name,
           profilePic: p.user.profilePic,
+          platform: 'sociality',
+          isOnline: false,
           role: p.role,
           joinedAt: p.joinedAt
         })),
@@ -230,7 +234,7 @@ export class RoomParticipantService {
         profilePic: user.profilePic || '',
         platform: user._id.platform,
         role: 'member',
-        joinedAt: null,
+        joinedAt: undefined,
         lastSeen: user.lastSeen,
         messageCount: user.messageCount,
         isOnline: false

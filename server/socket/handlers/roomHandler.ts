@@ -1,6 +1,6 @@
 import { Server, Socket } from "socket.io";
-import Room from "../../../models/roomModel.js";
-import logger from "../../../utils/logger.js";
+import Room from "../../models/roomModel.js";
+import logger from "../../utils/logger.js";
 
 export const handleRooms = (io: Server, socket: Socket) => {
 	socket.on("joinRoom", async ({ roomId }) => {
@@ -19,7 +19,7 @@ export const handleRooms = (io: Server, socket: Socket) => {
 				return;
 			}
 
-			if (!room.isParticipant(userId)) {
+			if (!(room as any).isParticipant(userId)) {
 				logger.warn(`Unauthorized socket room join attempt: user ${userId} for room ${roomId}`);
 				socket.emit("roomJoined", { roomId, success: false, error: "Unauthorized: You must join the room first" });
 				return;

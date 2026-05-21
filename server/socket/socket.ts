@@ -16,7 +16,7 @@ const io = new Server(server, {
 				"http://localhost:7101",
 				/^https:\/\/.*\.ngrok\.io$/,
 				process.env.FRONTEND_URL
-			].filter(Boolean),
+			].filter(Boolean) as (string | RegExp)[],
 		methods: ["GET", "POST"],
 		credentials: true,
 	},

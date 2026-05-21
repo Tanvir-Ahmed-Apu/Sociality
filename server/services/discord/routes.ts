@@ -43,7 +43,7 @@ router.post('/api/cross-platform/relay', async (req, res) => {
     const { roomId, message } = req.body;
     if (!roomId || !message) return res.status(400).json({ success: false, error: 'Room ID and message are required' });
 
-    const binding = await DiscordBinding.findByRoomId(roomId);
+    const binding = await (DiscordBinding as any).findByRoomId(roomId);
     let channelId = binding ? binding.discordChannelId : discordChannels.get(roomId);
     if (!channelId) return res.status(404).json({ success: false, error: 'No Discord channel connected to this room' });
 
