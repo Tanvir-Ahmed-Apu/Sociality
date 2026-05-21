@@ -2,6 +2,7 @@ import { Box, VStack, Button, IconButton, useColorModeValue } from "@chakra-ui/r
 import { IoAttach, IoImageOutline } from "react-icons/io5";
 import { FaFileAlt } from "react-icons/fa";
 import { RefObject, useEffect } from "react";
+import { useChatTheme } from '../../../hooks/useChatTheme';
 
 interface AttachmentMenuProps {
     showAttachMenu: boolean;
@@ -20,10 +21,11 @@ export const AttachmentMenu = ({
     handleFileAttachment,
     attachMenuRef
 }: AttachmentMenuProps) => {
-    const textColor = useColorModeValue("black", "white");
+    const { textColor, inputBorderColor, activeBg } = useChatTheme();
     const attachmentBg = useColorModeValue("white", "#1A1A1A");
     const attachmentColor = useColorModeValue("gray.600", "gray.400");
-    const inputBorderColor = useColorModeValue("gray.200", "whiteAlpha.100");
+    const iconHoverBg = useColorModeValue("blackAlpha.100", "whiteAlpha.100");
+    const menuItemHoverBg = useColorModeValue("blackAlpha.50", "whiteAlpha.100");
 
     useEffect(() => {
         const handleClickOutside = (event: any) => {
@@ -47,7 +49,7 @@ export const AttachmentMenu = ({
                 icon={<IoAttach size={24} />}
                 variant="ghost"
                 color="gray.400"
-                _hover={{ color: textColor, bg: useColorModeValue("blackAlpha.100", "whiteAlpha.100") }}
+                _hover={{ color: textColor, bg: iconHoverBg }}
                 borderRadius="full"
                 size="md"
                 onClick={(e) => {
@@ -81,7 +83,7 @@ export const AttachmentMenu = ({
                             justifyContent="flex-start"
                             borderRadius="10px"
                             color={attachmentColor}
-                            _hover={{ bg: useColorModeValue("blackAlpha.50", "whiteAlpha.100"), color: textColor }}
+                            _hover={{ bg: menuItemHoverBg, color: textColor }}
                             onClick={handleImageAttachment}
                         >
                             Photo or Video
@@ -94,7 +96,7 @@ export const AttachmentMenu = ({
                             justifyContent="flex-start"
                             borderRadius="10px"
                             color={attachmentColor}
-                            _hover={{ bg: useColorModeValue("blackAlpha.50", "whiteAlpha.100"), color: textColor }}
+                            _hover={{ bg: menuItemHoverBg, color: textColor }}
                             onClick={handleFileAttachment}
                         >
                             Document

@@ -1,6 +1,7 @@
 import { Flex, IconButton, Avatar, AvatarBadge, Text, Badge, HStack, useColorModeValue } from "@chakra-ui/react";
 import { FaGlobe } from "react-icons/fa";
 import { FiMoreVertical } from "react-icons/fi";
+import { useChatTheme } from '../../../hooks/useChatTheme';
 
 interface MessageHeaderProps {
 	selectedConversation: any;
@@ -17,8 +18,10 @@ const MessageHeader = ({
 	showRightSidebar,
 	setShowRightSidebar
 }: MessageHeaderProps) => {
+	const { textColor: chatHeaderTextColor } = useChatTheme();
 	const chatHeaderBg = useColorModeValue("rgba(255, 255, 255, 0.95)", "rgba(0, 0, 0, 0.7)");
-	const chatHeaderTextColor = useColorModeValue("black", "white");
+	const iconColor = useColorModeValue("gray.600", "gray.400");
+	const iconHoverBg = useColorModeValue("blackAlpha.100", "whiteAlpha.100");
 
 	return (
 		<Flex
@@ -92,8 +95,8 @@ const MessageHeader = ({
 				<IconButton
 					icon={<FiMoreVertical size={20} />}
 					variant="ghost"
-					color={useColorModeValue("gray.600", "gray.400")}
-					_hover={{ color: chatHeaderTextColor, bg: useColorModeValue("blackAlpha.100", "whiteAlpha.100") }}
+					color={iconColor}
+					_hover={{ color: chatHeaderTextColor, bg: iconHoverBg }}
 					borderRadius="full"
 					aria-label="More"
 					onClick={() => setShowRightSidebar(!showRightSidebar)}

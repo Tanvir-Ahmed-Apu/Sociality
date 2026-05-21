@@ -1,6 +1,7 @@
 import { Box, HStack, Image, Spinner, VStack, Text, IconButton, useColorModeValue } from "@chakra-ui/react";
 import { FaFileAlt } from "react-icons/fa";
 import { CloseIcon } from "@chakra-ui/icons";
+import { useChatTheme } from '../../../hooks/useChatTheme';
 
 interface AttachmentPreviewProps {
     imgUrl: string | null | ArrayBuffer;
@@ -17,9 +18,9 @@ export const AttachmentPreview = ({
     clearImages,
     clearFileSelection
 }: AttachmentPreviewProps) => {
-    const inputBgColor = useColorModeValue("gray.50", "#121212");
-    const inputBorderColor = useColorModeValue("gray.200", "whiteAlpha.100");
-    const textColor = useColorModeValue("black", "white");
+    const { inputBgColor, inputBorderColor, textColor } = useChatTheme();
+    const thumbnailBg = useColorModeValue("gray.200", "black");
+    const iconHoverBg = useColorModeValue("blackAlpha.100", "whiteAlpha.100");
 
     if (!imgUrl && !filePreview) return null;
 
@@ -35,7 +36,7 @@ export const AttachmentPreview = ({
                         w="60px"
                         h="60px"
                         borderRadius="12px"
-                        bg={useColorModeValue("gray.200", "black")}
+                        bg={thumbnailBg}
                         src={(imgUrl || filePreview?.url) as string}
                         objectFit="cover"
                         fallback={<Spinner size="sm" />}
@@ -45,7 +46,7 @@ export const AttachmentPreview = ({
                         w="60px"
                         h="60px"
                         borderRadius="12px"
-                        bg={useColorModeValue("gray.200", "black")}
+                        bg={thumbnailBg}
                         display="flex"
                         alignItems="center"
                         justifyContent="center"
@@ -64,7 +65,7 @@ export const AttachmentPreview = ({
                     size="xs"
                     variant="ghost"
                     color="gray.500"
-                    _hover={{ color: textColor, bg: useColorModeValue("blackAlpha.100", "whiteAlpha.100") }}
+                    _hover={{ color: textColor, bg: iconHoverBg }}
                     onClick={() => { clearImages(); clearFileSelection(); }}
                     aria-label="Remove"
                     borderRadius="full"

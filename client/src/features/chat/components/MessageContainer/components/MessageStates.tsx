@@ -1,9 +1,10 @@
 import { Flex, VStack, Heading, Text, Box, Skeleton, SkeletonCircle, Input, Button, useColorModeValue } from "@chakra-ui/react";
 import { BsChatDots } from "react-icons/bs";
 import { FaGlobe } from "react-icons/fa";
+import { useChatTheme } from '../../../hooks/useChatTheme';
 
 export const EmptyMessageState = ({ selectedConversation }: { selectedConversation: any }) => {
-	const textColor = useColorModeValue("black", "white");
+	const { textColor } = useChatTheme();
 	
 	return (
 		<Flex direction="column" align="center" justify="center" h="100%" py={10} position="relative" zIndex={1}>
@@ -103,16 +104,15 @@ export const AccessDeniedState = ({
 	handleJoinWithCode: () => void;
 	joining: boolean;
 }) => {
-	const borderColor = useColorModeValue("gray.100", "whiteAlpha.100");
-	const textColor = useColorModeValue("black", "white");
-	const chatContainerBg = useColorModeValue("linear(to-b, #F7FAFC 0%, #EDF2F7 100%)", "linear(to-b, #0A0A0A 0%, #000000 100%)");
+	const { borderColor, textColor, chatContainerBg, inputBgColor } = useChatTheme();
+	const cardBg = useColorModeValue("white", "rgba(30, 30, 30, 0.4)");
 
 	return (
 		<Flex direction="column" align="center" justify="center" h="100%" bg={chatContainerBg} p={10}>
 			<VStack
 				p={10}
 				borderRadius="40px"
-				bg={useColorModeValue("white", "rgba(30, 30, 30, 0.4)")}
+				bg={cardBg}
 				backdropFilter="blur(20px)"
 				boxShadow="0 25px 50px rgba(0, 0, 0, 0.4)"
 				border="1px solid"
@@ -148,7 +148,7 @@ export const AccessDeniedState = ({
 						textAlign="center"
 						fontWeight="800"
 						letterSpacing="4px"
-						bg={useColorModeValue("gray.50", "whiteAlpha.50")}
+						bg={inputBgColor}
 						_focus={{ borderColor: "brand.primary.500" }}
 					/>
 					<Button 
