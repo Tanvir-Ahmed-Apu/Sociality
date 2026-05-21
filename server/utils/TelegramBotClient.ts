@@ -67,7 +67,7 @@ export class TelegramBotClient extends EventEmitter {
       body: JSON.stringify(body),
     });
 
-    const data = await response.json();
+    const data = await response.json() as any;
     if (!data.ok) {
       throw new Error(`Telegram API Error: ${data.description}`);
     }
