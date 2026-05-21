@@ -1,4 +1,5 @@
-import { Client, GatewayIntentBits, SlashCommandBuilder, REST, Routes } from 'discord.js';
+import { Client, IntentsBitField, SlashCommandBuilder, REST } from 'discord.js';
+
 import axios from 'axios';
 import DiscordBinding from '../../models/discordBindingModel.js';
 import logger from '../../utils/logger.js';
@@ -23,10 +24,10 @@ export async function initBot() {
   try {
     client = new Client({
       intents: [
-        GatewayIntentBits.Guilds,
-        GatewayIntentBits.GuildMessages,
-        GatewayIntentBits.MessageContent,
-        GatewayIntentBits.DirectMessages
+        IntentsBitField.Flags.Guilds,
+        IntentsBitField.Flags.GuildMessages,
+        IntentsBitField.Flags.MessageContent,
+        IntentsBitField.Flags.DirectMessages
       ]
     });
 
@@ -41,7 +42,7 @@ export async function initBot() {
         if (message.author.bot || !message.content) return;
 
         const channelId = message.channel.id;
-        const binding = await DiscordBinding.findByChannelId(channelId);
+        const binding = await (DiscordBinding as any).findByChannelId(channelId);
         let roomId: string | undefined | null = null;
 
         if (binding) roomId = binding.roomId;
@@ -101,7 +102,7 @@ async function registerSlashCommands() {
 
   const rest = new REST({ version: '10' }).setToken(DISCORD_BOT_TOKEN);
   try {
-    await rest.put(Routes.applicationCommands(DISCORD_CLIENT_ID), { body: commands });
+    await rest.put(`/applications/${DISCORD_CLIENT_ID}/commands` as any, { body: commands });
     logger.info('Registered Discord slash commands');
   } catch (err: any) {
     logger.error('Error registering Discord slash commands:', err);
@@ -116,7 +117,7 @@ export async function loadDiscordBindings() {
       roomMappings.set(binding.discordChannelId, binding.roomId);
 
       if (client && client.isReady()) {
-        binding.validateBinding(client).catch((e: any) => logger.error('Background validation failed:', e?.message || e));
+        (binding as any).validateBinding(client).catch((e: any) => logger.error('Background validation failed:', e?.message || e));
       }
     }
     logger.info(`Loaded ${bindings.length} Discord bindings`);
@@ -141,13 +142,13 @@ export async function handleJoinCommand(interaction: any) {
       if (room) actualRoomId = room.roomId;
     }
 
-    const existingBinding = await DiscordBinding.findByChannelId(channelId);
+    const existingBinding = await (DiscordBinding as any).findByChannelId(channelId);
     if (existingBinding) {
       await interaction.editReply({ content: `This channel is already connected to room: ${existingBinding.roomId}`, ephemeral: true });
       return;
     }
 
-    const roomBinding = await DiscordBinding.findByRoomId(actualRoomId);
+    const roomBinding = await (DiscordBinding as any).findByRoomId(actualRoomId);
     if (roomBinding) {
       await interaction.editReply({ content: `Room ${roomIdInput} is already connected`, ephemeral: true });
       return;
@@ -183,7 +184,7 @@ export async function handleLeaveCommand(interaction: any) {
   try {
     await interaction.deferReply();
     const channelId = interaction.channel.id;
-    const binding = await DiscordBinding.findByChannelId(channelId);
+    const binding = await (DiscordBinding as any).findByChannelId(channelId);
     if (!binding) {
       await interaction.editReply({ content: `This channel is not connected to any room.`, ephemeral: true });
       return;
@@ -205,7 +206,7 @@ export async function handleStatusCommand(interaction: any) {
   try {
     await interaction.deferReply();
     const channelId = interaction.channel.id;
-    const binding = await DiscordBinding.findByChannelId(channelId);
+    const binding = await (DiscordBinding as any).findByChannelId(channelId);
     if (binding) {
       await interaction.editReply({ content: `Connected to room ${binding.roomId} since ${binding.createdAt.toLocaleDateString()}` });
     } else {
