@@ -1,11 +1,12 @@
 import React from 'react';
-import { Flex, useColorModeValue } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
 import { useRecoilValue } from 'recoil';
 import { userAtom } from '../../../../atoms';
 import MessageContainer from "../MessageContainer";
 import { WorkspaceRail, RightRail } from './components/LayoutRails';
 import { ChatList } from './components/ChatList';
 import { EmptyChatState } from './components/EmptyChatState';
+import { useChatTheme } from '../../hooks/useChatTheme';
 
 const ModernChat = ({
   conversations,
@@ -24,12 +25,7 @@ const ModernChat = ({
   onlineUsers
 }: any) => {
   const currentUser = useRecoilValue(userAtom);
-  const mainBg = useColorModeValue('gray.50', '#000000');
-  const cardBg = useColorModeValue('white', 'rgba(255, 255, 255, 0.02)');
-  const cardBorder = useColorModeValue('gray.200', 'whiteAlpha.100');
-  const shadowColor = useColorModeValue('rgba(0, 0, 0, 0.05)', 'rgba(0, 0, 0, 0.4)');
-  const scrollbarThumb = useColorModeValue('rgba(0,0,0,0.1)', 'rgba(255, 255, 255, 0.1)');
-  const scrollbarThumbHover = useColorModeValue('rgba(0,0,0,0.2)', 'rgba(255, 255, 255, 0.2)');
+  const { mainBg, cardBg, cardBorder, shadowColor, scrollbarThumb, scrollbarThumbHover } = useChatTheme();
 
   return (
     <Flex h="100vh" w="full" overflow="hidden" fontFamily="'Inter', sans-serif" bg={mainBg} p={{ base: 0, md: 4 }} gap={{ base: 0, md: 4 }}>

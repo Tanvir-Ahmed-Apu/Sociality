@@ -6,6 +6,7 @@ import {
 } from '@chakra-ui/react';
 import { FiSearch, FiPlus, FiMessageSquare } from 'react-icons/fi';
 import { FaGlobe, FaTelegram, FaDiscord } from "react-icons/fa";
+import { useChatTheme } from '../../../hooks/useChatTheme';
 
 export const ChatList = ({
   currentUser,
@@ -22,19 +23,14 @@ export const ChatList = ({
   onShowJoinRoom,
   onlineUsers
 }: any) => {
-  const bgColor = useColorModeValue('white', '#0A0A0A');
-  const hoverBg = useColorModeValue('gray.50', '#121212');
-  const activeBg = useColorModeValue('gray.100', '#1A1A1A');
-  const textColor = useColorModeValue('black', 'white');
-  const mutedColor = useColorModeValue('gray.500', 'gray.500');
-  const segmentedControlBg = useColorModeValue('gray.100', 'rgba(255, 255, 255, 0.03)');
-  const segmentedControlBorder = useColorModeValue('gray.200', 'whiteAlpha.100');
-  const itemActiveBg = useColorModeValue('whiteAlpha.900', 'whiteAlpha.200');
-  const itemHoverBg = useColorModeValue('blackAlpha.50', 'whiteAlpha.50');
-  const badgeBg = useColorModeValue('blackAlpha.100', 'whiteAlpha.100');
-  const badgeColor = useColorModeValue('blackAlpha.700', 'whiteAlpha.700');
-  const skeletonStart = useColorModeValue('gray.100', '#1A1A1A');
-  const skeletonEnd = useColorModeValue('gray.200', '#111111');
+  const {
+    bgColor, hoverBg, activeBg, textColor, mutedColor,
+    segmentedControlBg, segmentedControlBorder,
+    itemActiveBg, itemHoverBg, badgeBg, badgeColor,
+    skeletonStart, skeletonEnd, shadowColor
+  } = useChatTheme();
+  const activeTabShadow = useColorModeValue("0 2px 8px rgba(0,0,0,0.1)", "0 4px 12px rgba(0,0,0,0.4)");
+  const unreadTextColor = useColorModeValue("blackAlpha.900", "whiteAlpha.900");
 
   const [isSearchOpen, setIsSearchOpen] = React.useState(false);
 
@@ -129,7 +125,7 @@ export const ChatList = ({
               borderRadius="14px"
               bg={!isCrossPlatformMode ? itemActiveBg : "transparent"}
               color={!isCrossPlatformMode ? textColor : "gray.500"}
-              boxShadow={!isCrossPlatformMode ? useColorModeValue("0 2px 8px rgba(0,0,0,0.1)", "0 4px 12px rgba(0,0,0,0.4)") : "none"}
+              boxShadow={!isCrossPlatformMode ? activeTabShadow : "none"}
               onClick={() => isCrossPlatformMode && onToggleMode()}
               transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
               _hover={{ color: textColor, bg: !isCrossPlatformMode ? itemActiveBg : itemHoverBg }}
@@ -148,7 +144,7 @@ export const ChatList = ({
               borderRadius="14px"
               bg={isCrossPlatformMode ? itemActiveBg : "transparent"}
               color={isCrossPlatformMode ? textColor : "gray.500"}
-              boxShadow={isCrossPlatformMode ? useColorModeValue("0 2px 8px rgba(0,0,0,0.1)", "0 4px 12px rgba(0,0,0,0.4)") : "none"}
+              boxShadow={isCrossPlatformMode ? activeTabShadow : "none"}
               onClick={() => !isCrossPlatformMode && onToggleMode()}
               transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
               _hover={{ color: textColor, bg: isCrossPlatformMode ? itemActiveBg : itemHoverBg }}
@@ -248,7 +244,7 @@ export const ChatList = ({
                 </Flex>
                 <Text 
                   fontSize="sm" 
-                  color={!item.lastMessage?.seen && item.lastMessage?.sender !== currentUser?._id ? useColorModeValue("blackAlpha.900", "whiteAlpha.900") : mutedColor} 
+                  color={!item.lastMessage?.seen && item.lastMessage?.sender !== currentUser?._id ? unreadTextColor : mutedColor} 
                   fontWeight={!item.lastMessage?.seen && item.lastMessage?.sender !== currentUser?._id ? "600" : "400"}
                   noOfLines={1}
                 >

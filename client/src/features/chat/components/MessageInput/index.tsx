@@ -13,6 +13,7 @@ import { useRecoilValue, useSetRecoilState } from "recoil";
 import { userAtom, conversationsAtom, selectedConversationAtom } from "../../../../atoms";
 import useShowToast from "../../../../hooks/useShowToast";
 import SimpleEmojiPicker from "../../../../components/ui/SimpleEmojiPicker";
+import { useChatTheme } from "../../hooks/useChatTheme";
 
 import { useMessageAttachments } from "./hooks/useMessageAttachments";
 import { useMessageInputState } from "./hooks/useMessageInputState";
@@ -80,11 +81,9 @@ const MessageInput = memo(({ setMessages }: MessageInputProps) => {
         fileInputRef
     });
 
-    const inputBgColor = useColorModeValue("gray.50", "#121212");
-    const textColor = useColorModeValue("black", "white");
-    const placeholderColor = useColorModeValue("gray.500", "gray.500");
-    const containerBg = "transparent";
-    const inputBorderColor = useColorModeValue("gray.200", "whiteAlpha.100");
+    const { inputBgColor, textColor, placeholderColor, inputBorderColor, scrollbarThumb, scrollbarThumbHover } = useChatTheme();
+    const inputShadow = useColorModeValue("0 4px 12px rgba(0,0,0,0.05)", "0 4px 20px rgba(0,0,0,0.4)");
+    const iconHoverBg = useColorModeValue("blackAlpha.100", "whiteAlpha.100");
 
     const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
         if (e.key === 'Enter' && !e.shiftKey) {
@@ -95,7 +94,7 @@ const MessageInput = memo(({ setMessages }: MessageInputProps) => {
 
     return (
         <Box
-            bg={containerBg}
+            bg="transparent"
             p={0}
             position="relative"
             zIndex={100}
@@ -126,7 +125,7 @@ const MessageInput = memo(({ setMessages }: MessageInputProps) => {
             <Flex 
                 gap={2} alignItems="center" bg={inputBgColor} 
                 borderRadius="30px" px={4} py={2} 
-                boxShadow={useColorModeValue("0 4px 12px rgba(0,0,0,0.05)", "0 4px 20px rgba(0,0,0,0.4)")}
+                boxShadow={inputShadow}
                 border="1px solid" borderColor={inputBorderColor}
             >
                 <AttachmentMenu 
@@ -168,11 +167,11 @@ const MessageInput = memo(({ setMessages }: MessageInputProps) => {
                                 background: 'transparent',
                             },
                             '&::-webkit-scrollbar-thumb': {
-                                background: useColorModeValue('rgba(0,0,0,0.2)', 'rgba(255, 255, 255, 0.2)'),
+                                background: scrollbarThumb,
                                 borderRadius: '2px',
                             },
                             '&::-webkit-scrollbar-thumb:hover': {
-                                background: useColorModeValue('rgba(0,0,0,0.3)', 'rgba(255, 255, 255, 0.3)'),
+                                background: scrollbarThumbHover,
                             }
                         }}
                     />
@@ -183,7 +182,7 @@ const MessageInput = memo(({ setMessages }: MessageInputProps) => {
                         icon={<IoHappyOutline size={22} />}
                         variant="ghost"
                         color="gray.400"
-                        _hover={{ color: textColor, bg: useColorModeValue("blackAlpha.100", "whiteAlpha.100") }}
+                        _hover={{ color: textColor, bg: iconHoverBg }}
                         borderRadius="full"
                         size="md"
                         onClick={onEmojiOpen}
@@ -194,7 +193,7 @@ const MessageInput = memo(({ setMessages }: MessageInputProps) => {
                             icon={<IoMicOutline size={22} />}
                             variant="ghost"
                             color="gray.400"
-                            _hover={{ color: textColor, bg: useColorModeValue("blackAlpha.100", "whiteAlpha.100") }}
+                            _hover={{ color: textColor, bg: iconHoverBg }}
                             borderRadius="full"
                             size="md"
                             onClick={() => handleVoiceRecording(showToast)}

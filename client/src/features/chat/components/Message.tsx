@@ -11,9 +11,7 @@ import { FaTrash, FaMicrophone, FaPlay, FaPause, FaTelegram, FaDiscord, FaGlobe 
 import { AddIcon, MinusIcon, CloseIcon, DownloadIcon } from "@chakra-ui/icons";
 import { useRecoilValue } from "recoil";
 import { selectedConversationAtom } from "../../../atoms";
-
-const formatTime = (s: number) => `${Math.floor(s / 60).toString().padStart(2, '0')}:${(s % 60).toString().padStart(2, '0')}`;
-const formatMessageTime = (t: any) => t ? new Date(t).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
+import { formatTime, formatMessageTime } from "../utils/timeUtils";
 
 const PLATFORM_CONFIG: any = {
   telegram: { icon: FaTelegram, color: "#0088cc" },

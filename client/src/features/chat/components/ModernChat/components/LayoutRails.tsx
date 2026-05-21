@@ -1,12 +1,12 @@
-import { VStack, Box, useColorModeValue } from "@chakra-ui/react";
+import { VStack, Box } from "@chakra-ui/react";
+import { useChatTheme } from '../../../hooks/useChatTheme';
 
 export const WorkspaceRail = () => {
-    const railBg = useColorModeValue('white', '#000000');
-    const borderColor = useColorModeValue('gray.100', 'whiteAlpha.100');
+    const { bgColor, borderColor } = useChatTheme();
 
     return (
         <VStack 
-            w="2px" h="full" bg={railBg} py={1} spacing={2} align="center" 
+            w="2px" h="full" bg={bgColor} py={1} spacing={2} align="center" 
             flexShrink={0}
             display={{ base: "none", md: "flex" }}
             borderRight="1px solid"
@@ -18,12 +18,11 @@ export const WorkspaceRail = () => {
 };
 
 export const RightRail = () => {
-    const railBg = useColorModeValue('white', '#000000');
-    const borderColor = useColorModeValue('gray.100', 'whiteAlpha.100');
+    const { bgColor, borderColor } = useChatTheme();
 
     return (
         <VStack 
-            w="60px" h="full" bg={railBg} flexShrink={0}
+            w="60px" h="full" bg={bgColor} flexShrink={0}
             display={{ base: "none", md: "block" }}
             borderLeft="1px solid"
             borderColor={borderColor}

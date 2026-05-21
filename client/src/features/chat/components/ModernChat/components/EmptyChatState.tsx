@@ -1,12 +1,9 @@
 import { Flex, Box, VStack, Heading, Text, Badge, Icon, useColorModeValue } from "@chakra-ui/react";
 import { FiMessageSquare } from "react-icons/fi";
+import { useChatTheme } from '../../../hooks/useChatTheme';
 
 export const EmptyChatState = () => {
-    const cardBorder = useColorModeValue('gray.200', 'whiteAlpha.100');
-    const shadowColor = useColorModeValue('rgba(0, 0, 0, 0.05)', 'rgba(0, 0, 0, 0.4)');
-    const textColor = useColorModeValue('black', 'white');
-    const glassBg = useColorModeValue('rgba(255, 255, 255, 0.8)', 'rgba(255, 255, 255, 0.02)');
-    const badgeBg = useColorModeValue('blackAlpha.100', 'whiteAlpha.100');
+    const { cardBorder, shadowColor, textColor, glassBg, badgeBg } = useChatTheme();
 
     return (
         <Flex 

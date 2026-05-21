@@ -16,6 +16,8 @@ import { EmptyMessageState, MessageSkeletons, AccessDeniedState } from "./compon
 import { useChatMessages } from "./hooks/useChatMessages";
 import { useChatSocket } from "./hooks/useChatSocket";
 import { useChatPolling } from "./hooks/useChatPolling";
+import { useChatTheme } from "../../hooks/useChatTheme";
+import { formatMessageTime, shouldDisplayTimestamp } from "../../utils/timeUtils";
 
 const MessageContainer = ({
 	onShareRoom,
@@ -34,13 +36,7 @@ const MessageContainer = ({
 	const [showGroupSettings, setShowGroupSettings] = useState(false);
 	const [showRightSidebar, setShowRightSidebar] = useState(false);
 
-	// Theme-aware colors
-	const bgColor = useColorModeValue("white", "#0A0A0A");
-	const borderColor = useColorModeValue("gray.100", "whiteAlpha.100");
-	const mutedTextColor = useColorModeValue("gray.500", "gray.400");
-	const timestampBg = useColorModeValue("rgba(0, 0, 0, 0.05)", "rgba(30, 30, 30, 0.7)");
-	const chatContainerBg = useColorModeValue("linear(to-b, #F7FAFC 0%, #EDF2F7 100%)", "linear(to-b, #0A0A0A 0%, #000000 100%)");
-	const chatDotPattern = useColorModeValue("rgba(0,0,0,0.03)", "rgba(255,255,255,0.03)");
+	const { bgColor, borderColor, mutedColor: mutedTextColor, timestampBg, chatContainerBg, chatDotPattern } = useChatTheme();
 
 	const {
 		messages,
@@ -102,28 +98,7 @@ const MessageContainer = ({
 		setShowGroupSettings(false);
 	}, [setConversations]);
 
-	const formatMessageTime = useCallback((timestamp: string | Date) => {
-		const date = new Date(timestamp);
-		const now = new Date();
-		const yesterday = new Date(now);
-		yesterday.setDate(yesterday.getDate() - 1);
 
-		if (date.toDateString() === now.toDateString()) {
-			return `Today at ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
-		} else if (date.toDateString() === yesterday.toDateString()) {
-			return `Yesterday at ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
-		} else {
-			return `${date.toLocaleDateString([], { month: 'short', day: 'numeric' })} at ${date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
-		}
-	}, []);
-
-	const shouldDisplayTimestamp = useCallback((currentMsg: any, previousMsg: any) => {
-		if (!previousMsg) return true;
-		const currentTime = new Date(currentMsg.createdAt);
-		const prevTime = new Date(previousMsg.createdAt);
-		const timeDiff = currentTime.getTime() - prevTime.getTime();
-		return timeDiff > 15 * 60 * 1000;
-	}, []);
 
 	useEffect(() => {
 		const scrollToBottom = () => {
