@@ -1,6 +1,6 @@
 import axios from 'axios';
-import DiscordBinding from '../models/discordBindingModel.js';
-import logger from '../utils/logger.js';
+import DiscordBinding from '../../models/discordBindingModel.js';
+import logger from '../../utils/logger.js';
 
 const FEDERATION_REGISTRY_URL = process.env.FEDERATION_REGISTRY_URL || 'http://127.0.0.1:7300';
 const PLATFORM_URL = process.env.DISCORD_PLATFORM_URL || 'http://127.0.0.1:7302';

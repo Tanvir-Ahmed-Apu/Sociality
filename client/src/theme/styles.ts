@@ -12,10 +12,12 @@ export const styles = {
       padding: 0,
       transition: "background-color 0.2s, color 0.2s",
       fontFamily: "'Inter', -apple-system, sans-serif",
+      overflowX: "hidden",
     },
     html: {
       margin: 0,
       padding: 0,
+      overflowX: "hidden",
     },
     // Clean modern typography
     "h1, h2, h3, h4, h5, h6": {

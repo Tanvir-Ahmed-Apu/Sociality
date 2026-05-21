@@ -21,7 +21,7 @@ const MainLayout = ({ children, fullWidth = false }: MainLayoutProps) => {
       {/* Main Content Area */}
       <Flex
         ml={sidebarWidth}
-        w="full"
+        w={{ base: "full", lg: `calc(100% - 80px)` }}
         mx="auto"
         justify="center"
       >

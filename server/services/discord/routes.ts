@@ -1,8 +1,8 @@
 import express from 'express';
 import axios from 'axios';
-import DiscordBinding from '../models/discordBindingModel.js';
+import DiscordBinding from '../../models/discordBindingModel.js';
 import { discordChannels, roomMappings, getClient } from './bot.js';
-import logger from '../utils/logger.js';
+import logger from '../../utils/logger.js';
 
 const router = express.Router();
 

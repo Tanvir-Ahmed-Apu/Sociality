@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const discordBindingSchema = mongoose.Schema(
+const discordBindingSchema = new mongoose.Schema(
   {
     roomId: {
       type: String,

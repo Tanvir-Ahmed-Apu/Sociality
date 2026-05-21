@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import User from "../models/userModel.js";
-import * as bcrypt from "bcryptjs";
+import bcrypt from "bcryptjs";
 import generateTokenAndSetCookie from "../utils/helpers/generateTokenAndSetCookie.js";
 import logger from "../utils/logger.js";
 import suggestionCache from "../utils/cache.js";
