@@ -1,7 +1,7 @@
 import { Client, GatewayIntentBits, SlashCommandBuilder, REST, Routes } from 'discord.js';
 import axios from 'axios';
-import DiscordBinding from '../models/discordBindingModel.js';
-import logger from '../utils/logger.js';
+import DiscordBinding from '../../models/discordBindingModel.js';
+import logger from '../../utils/logger.js';
 
 export const discordChannels = new Map<string, string>(); // Map roomId -> channelId
 export const roomMappings = new Map<string, string>(); // Map channelId -> roomId
@@ -136,7 +136,7 @@ export async function handleJoinCommand(interaction: any) {
 
     let actualRoomId = roomIdInput;
     if (roomIdInput.length <= 10) {
-      const Room = (await import('../models/roomModel.js')).default;
+      const Room = (await import('../../models/roomModel.js')).default;
       const room = await Room.findOne({ roomCode: roomIdInput.toUpperCase() });
       if (room) actualRoomId = room.roomId;
     }
