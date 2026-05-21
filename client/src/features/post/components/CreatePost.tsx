@@ -1,16 +1,12 @@
-import { AddIcon, ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import {
 	Button,
-	CloseButton,
 	Flex,
 	FormControl,
-	Image,
 	Input,
 	Modal,
 	ModalBody,
 	ModalCloseButton,
 	ModalContent,
-	ModalFooter,
 	ModalHeader,
 	ModalOverlay,
 	Text,
@@ -18,21 +14,14 @@ import {
 	useColorModeValue,
 	useDisclosure,
 	Avatar,
-	Box,
 	IconButton,
-	HStack,
-	Circle,
 } from "@chakra-ui/react";
-import { useRef, useState } from "react";
-import usePreviewImg from "../../../hooks/usePreviewImg";
+import { useRef } from "react";
 import { BsFillImageFill } from "react-icons/bs";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { userAtom, postsAtom } from "../../../atoms";
-import useShowToast from "../../../hooks/useShowToast";
-import { useParams } from "react-router-dom";
-import { Post, fetchWithSession } from "../../../utils/api";
-
-const MAX_CHAR = 500;
+import { useCreatePost } from "../hooks/useCreatePost";
+import CreatePostTrigger from "./CreatePostTrigger";
+import CreatePostImagePreview from "./CreatePostImagePreview";
+import { Post } from "../../../utils/api";
 
 interface CreatePostProps {
 	onPostCreated?: (post: Post) => void;
@@ -48,146 +37,32 @@ const CreatePost = ({ onPostCreated, hideTrigger = false, inline = false, extern
 	const onOpen = internalDisclosure.onOpen;
 	const onClose = externalClose !== undefined ? externalClose : internalDisclosure.onClose;
 
-	const [postText, setPostText] = useState("");
 	const {
-		handleImageChange,
-		setImgUrl,
+		postText,
+		remainingChar,
+		loading,
+		currentImageIndex,
+		setCurrentImageIndex,
 		imgUrls,
-		setImgUrls,
-		removeImage,
-		clearImages
-	} = usePreviewImg();
+		handleImageChange,
+		handleTextChange,
+		handleCreatePost,
+		handleCloseImage,
+		user,
+		MAX_CHAR,
+	} = useCreatePost({ onPostCreated, onClose });
+
 	const imageRef = useRef<HTMLInputElement>(null);
-	const [remainingChar, setRemainingChar] = useState(MAX_CHAR);
-	const user = useRecoilValue(userAtom);
-	const showToast = useShowToast();
-	const [loading, setLoading] = useState(false);
-	const [posts, setPosts] = useRecoilState(postsAtom);
-	const { username } = useParams();
-	const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-	const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-		const inputText = e.target.value;
-
-		if (inputText.length > MAX_CHAR) {
-			const truncatedText = inputText.slice(0, MAX_CHAR);
-			setPostText(truncatedText);
-			setRemainingChar(0);
-		} else {
-			setPostText(inputText);
-			setRemainingChar(MAX_CHAR - inputText.length);
-		}
-	};
-
-	const handleCreatePost = async () => {
-		if (!user) {
-			showToast("Error", "You must be logged in to create a post", "error");
-			return;
-		}
-		setLoading(true);
-		try {
-			// Backend now supports multiple images
-			const res = await fetchWithSession("/api/posts/create", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify({
-					postedBy: user._id,
-					text: postText,
-					img: imgUrls.length > 0 ? imgUrls[0] : null, // For backward compatibility
-					images: imgUrls // Send all images as an array
-				}),
-			});
-
-			if (res.ok) {
-				const data = await res.json();
-				showToast("Success", "Post created successfully", "success");
-				// Call the callback function if provided
-				if (onPostCreated) {
-					onPostCreated(data);
-				} else if (username === user.username) {
-					// Fallback to old behavior if no callback
-					setPosts([data, ...posts]);
-				}
-			} else {
-				const errorData = await res.json().catch(() => ({ error: 'Failed to create post' }));
-				showToast("Error", errorData.error || 'Failed to create post', "error");
-				return;
-			}
-			onClose();
-			setPostText("");
-			setImgUrl("");
-			setImgUrls([]);
-			setCurrentImageIndex(0);
-		} catch (error: any) {
-			showToast("Error", error.message || String(error), "error");
-		} finally {
-			setLoading(false);
-		}
-	};
 
 	return (
 		<>
-			{inline && (
-				<Box
-					p={4}
-					borderBottom="1px solid"
-					borderColor={useColorModeValue("gray.100", "whiteAlpha.100")}
-					onClick={onOpen}
-					cursor="pointer"
-					transition="all 0.2s"
-					_hover={{ bg: useColorModeValue("gray.50", "whiteAlpha.50") }}
-				>
-					<Flex gap={4} align="center">
-						<Avatar size="md" src={user?.profilePic} name={user?.username} />
-						<Text color="gray.500" fontSize="md">Start a thread...</Text>
-						<Button
-							ml="auto"
-							size="sm"
-							variant="outline"
-							borderColor={useColorModeValue("gray.300", "whiteAlpha.300")}
-							borderRadius="full"
-							fontWeight="600"
-							color={useColorModeValue("gray.600", "gray.400")}
-						>
-							Post
-						</Button>
-					</Flex>
-				</Box>
-			)}
-
-			{!hideTrigger && !inline && (
-				<Box
-					position={"fixed"}
-					bottom={10}
-					right={5}
-					bg="brand.primary.500"
-					color={useColorModeValue("white", "white")}
-					onClick={onOpen}
-					borderRadius="full"
-					boxShadow="0 0 20px rgba(0, 179, 116, 0.3)"
-					width="50px"
-					height="50px"
-					display="flex"
-					alignItems="center"
-					justifyContent="center"
-					borderWidth="1px"
-					borderColor={useColorModeValue("rgba(0, 0, 0, 0.1)", "rgba(255, 255, 255, 0.1)")}
-					zIndex={999}
-					cursor="pointer"
-					transition="all 0.3s ease"
-					_hover={{
-						bg: "brand.primary.400",
-						transform: "scale(1.1) rotate(180deg)",
-						boxShadow: "0 0 25px rgba(0, 179, 116, 0.5)"
-					}}
-					className="brand-button"
-				>
-					<AddIcon boxSize={6} />
-				</Box>
-			)}
-
+			<CreatePostTrigger
+				inline={inline}
+				hideTrigger={hideTrigger}
+				profilePic={user?.profilePic}
+				username={user?.username}
+				onOpen={onOpen}
+			/>
 
 			<Modal
 				isOpen={isOpen}
@@ -246,145 +121,13 @@ const CreatePost = ({ onPostCreated, hideTrigger = false, inline = false, extern
 								</FormControl>
 
 								{/* Image Preview */}
-								{imgUrls.length > 0 && (
-									<Box
-										mt={2}
-										mb={4}
-										position={"relative"}
-										borderRadius="lg"
-										overflow="hidden"
-										borderWidth="1px"
-										borderColor={useColorModeValue("gray.300", "rgba(255, 255, 255, 0.1)")}
-										boxShadow="0 4px 12px rgba(0, 0, 0, 0.2)"
-										transition="all 0.3s ease"
-										_hover={{ boxShadow: "0 6px 16px rgba(0, 179, 116, 0.2)" }}
-										className="glass-card"
-									>
-										{/* Image */}
-										<Image
-											src={imgUrls[currentImageIndex]}
-											alt={`Selected image ${currentImageIndex + 1}`}
-											maxH="300px"
-											objectFit="cover"
-											w="full"
-										/>
-
-										{/* Navigation arrows */}
-										{imgUrls.length > 1 && (
-											<>
-												{/* Left arrow */}
-												{currentImageIndex > 0 && (
-													<IconButton
-														icon={<ChevronLeftIcon boxSize={6} />}
-														aria-label="Previous image"
-														position="absolute"
-														left={2}
-														top="50%"
-														transform="translateY(-50%)"
-														borderRadius="full"
-														bg="rgba(0,0,0,0.7)"
-														color="white"
-														_hover={{ bg: "rgba(0,0,0,0.8)" }}
-														onClick={() => setCurrentImageIndex(prev => prev - 1)}
-													/>
-												)}
-
-												{/* Right arrow */}
-												{currentImageIndex < imgUrls.length - 1 && (
-													<IconButton
-														icon={<ChevronRightIcon boxSize={6} />}
-														aria-label="Next image"
-														position="absolute"
-														right={2}
-														top="50%"
-														transform="translateY(-50%)"
-														borderRadius="full"
-														bg="rgba(0,0,0,0.7)"
-														color="white"
-														_hover={{ bg: "rgba(0,0,0,0.8)" }}
-														onClick={() => setCurrentImageIndex(prev => prev + 1)}
-													/>
-												)}
-											</>
-										)}
-
-										{/* Image indicators */}
-										{imgUrls.length > 1 && (
-											<HStack
-												spacing={1}
-												position="absolute"
-												bottom={2}
-												left="50%"
-												transform="translateX(-50%)"
-												justify="center"
-											>
-												{imgUrls.map((_, index) => (
-													<Circle
-														key={index}
-														size={2}
-														bg={index === currentImageIndex ? "white" : "rgba(255,255,255,0.5)"}
-														cursor="pointer"
-														onClick={() => setCurrentImageIndex(index)}
-													/>
-												))}
-											</HStack>
-										)}
-
-										{/* Image counter */}
-										<Box
-											position="absolute"
-											top={2}
-											left={2}
-											bg="rgba(0,0,0,0.7)"
-											color="white"
-											fontSize="xs"
-											fontWeight="bold"
-											px={2}
-											py={1}
-											borderRadius="md"
-										>
-											{currentImageIndex + 1}/{imgUrls.length}
-										</Box>
-
-										{/* Add More Images Button */}
-										<IconButton
-											icon={<AddIcon />}
-											aria-label="Add more images"
-											position="absolute"
-											bottom={2}
-											right={10}
-											borderRadius="full"
-											bg="rgba(0, 179, 116, 0.7)"
-											color="white"
-											_hover={{ bg: "rgba(0, 179, 116, 0.9)" }}
-											onClick={() => imageRef.current?.click()}
-											size="sm"
-											title="Add more images"
-										/>
-
-										{/* Close button */}
-										<CloseButton
-											onClick={() => {
-												if (imgUrls.length === 1) {
-													clearImages();
-												} else {
-													removeImage(currentImageIndex);
-													if (currentImageIndex >= imgUrls.length - 1) {
-														setCurrentImageIndex(imgUrls.length - 2);
-													}
-												}
-											}}
-											bg={"rgba(0,0,0,0.7)"}
-											color="white"
-											position={"absolute"}
-											top={2}
-											right={2}
-											size="sm"
-											borderRadius="full"
-											_hover={{ bg: "rgba(255, 0, 0, 0.7)" }}
-										/>
-									</Box>
-								)}
+								<CreatePostImagePreview
+									imgUrls={imgUrls}
+									currentImageIndex={currentImageIndex}
+									setCurrentImageIndex={setCurrentImageIndex}
+									onCloseImage={handleCloseImage}
+									onAddMoreClick={() => imageRef.current?.click()}
+								/>
 
 								{/* Action Buttons */}
 								<Flex justify="space-between" align="center" mt={2}>

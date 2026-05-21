@@ -15,17 +15,10 @@ import {
     Text,
     IconButton,
     Textarea,
-    useToast,
-    Icon,
     useColorModeValue,
 } from "@chakra-ui/react";
-import { useRef, useState, useEffect } from "react";
-import { useRecoilState } from "recoil";
-import { Camera, Image, X, CaretRight, Sparkle } from "phosphor-react";
-import { userAtom } from "../../../atoms";
-import usePreviewImg from "../../../hooks/usePreviewImg";
-import { fetchWithSession, setCurrentTabUser } from "../../../utils/api";
-import useUserEvents from "../../../hooks/useUserEvents";
+import { Camera, X } from "phosphor-react";
+import { useEditProfile } from "../hooks/useEditProfile";
 
 interface EditProfileModalProps {
     isOpen: boolean;
@@ -33,76 +26,20 @@ interface EditProfileModalProps {
 }
 
 export const EditProfileModal = ({ isOpen, onClose }: EditProfileModalProps) => {
-    const [user, setUser] = useRecoilState(userAtom);
-    const { emitUserUpdate } = useUserEvents();
-    const [inputs, setInputs] = useState({
-        name: "",
-        username: "",
-        email: "",
-        bio: "",
-        location: "",
-        website: "",
-    });
-
-    const [updating, setUpdating] = useState(false);
-    const toast = useToast();
-
-    const { handleImageChange: handleProfilePicChange, imgUrl: profilePicUrl, setImgUrl: setProfilePicUrl } = usePreviewImg();
-    const { handleImageChange: handleCoverPicChange, imgUrl: coverPicUrl, setImgUrl: setCoverPicUrl } = usePreviewImg();
-
-    const fileRef = useRef<HTMLInputElement>(null);
-    const coverFileRef = useRef<HTMLInputElement>(null);
-
-    useEffect(() => {
-        if (user && isOpen) {
-            setInputs({
-                name: user.name || "",
-                username: user.username || "",
-                email: user.email || "",
-                bio: user.bio || "",
-                location: user.location || "",
-                website: user.website || "",
-            });
-        }
-    }, [user, isOpen]);
-
-    const handleSubmit = async () => {
-        if (!user) return;
-        setUpdating(true);
-
-        try {
-            const payload: Record<string, any> = { ...inputs };
-            if (profilePicUrl) payload.profilePic = profilePicUrl as string;
-            if (coverPicUrl) payload.coverPic = coverPicUrl as string;
-
-            const res = await fetchWithSession(`/api/users/update/${user._id}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload),
-            });
-
-            if (res.ok) {
-                const data = await res.json();
-                const updatedUser = {
-                    ...user,
-                    ...data,
-                    isProfileComplete: true,
-                };
-                setUser(updatedUser);
-                setCurrentTabUser(updatedUser);
-                emitUserUpdate(updatedUser);
-                toast({ title: "Success", description: "Profile updated", status: "success", duration: 3000 });
-                onClose();
-            } else {
-                const errorData = await res.json();
-                toast({ title: "Error", description: errorData.error || "Failed to update", status: "error", duration: 3000 });
-            }
-        } catch (error: any) {
-            toast({ title: "Error", description: error.message, status: "error", duration: 3000 });
-        } finally {
-            setUpdating(false);
-        }
-    };
+    const {
+        inputs,
+        handleInputChange,
+        updating,
+        profilePicUrl,
+        setCoverPicUrl,
+        coverPicUrl,
+        handleProfilePicChange,
+        handleCoverPicChange,
+        fileRef,
+        coverFileRef,
+        handleSubmit,
+        user,
+    } = useEditProfile({ isOpen, onClose });
 
     const inputBorderColor = useColorModeValue("blackAlpha.100", "whiteAlpha.200");
     const labelColor = useColorModeValue("gray.500", "gray.600");
@@ -249,7 +186,7 @@ export const EditProfileModal = ({ isOpen, onClose }: EditProfileModalProps) => 
                                 <Input
                                     variant="unstyled"
                                     value={inputs.name}
-                                    onChange={(e) => setInputs({ ...inputs, name: e.target.value })}
+                                    onChange={(e) => handleInputChange("name", e.target.value)}
                                     fontSize="15px"
                                     fontWeight="600"
                                     h="32px"
@@ -261,7 +198,7 @@ export const EditProfileModal = ({ isOpen, onClose }: EditProfileModalProps) => 
                                 <Textarea
                                     variant="unstyled"
                                     value={inputs.bio}
-                                    onChange={(e) => setInputs({ ...inputs, bio: e.target.value })}
+                                    onChange={(e) => handleInputChange("bio", e.target.value)}
                                     fontSize="15px"
                                     rows={2}
                                     minH="54px"
@@ -281,7 +218,7 @@ export const EditProfileModal = ({ isOpen, onClose }: EditProfileModalProps) => 
                                 <Input
                                     variant="unstyled"
                                     value={inputs.location}
-                                    onChange={(e) => setInputs({ ...inputs, location: e.target.value })}
+                                    onChange={(e) => handleInputChange("location", e.target.value)}
                                     fontSize="15px"
                                     h="32px"
                                 />
@@ -292,7 +229,7 @@ export const EditProfileModal = ({ isOpen, onClose }: EditProfileModalProps) => 
                                 <Input
                                     variant="unstyled"
                                     value={inputs.website}
-                                    onChange={(e) => setInputs({ ...inputs, website: e.target.value })}
+                                    onChange={(e) => handleInputChange("website", e.target.value)}
                                     fontSize="15px"
                                     placeholder="Add your website"
                                     _placeholder={{ color: placeholderColor }}
