@@ -1,8 +1,8 @@
-import { v2 as cloudinary } from "cloudinary";
+import { v2 as cloudinary, UploadApiOptions } from "cloudinary";
 import axios from "axios";
 import logger from "./logger.js";
 
-const uploadImage = async (imageData, options = {}) => {
+const uploadImage = async (imageData: string, options: UploadApiOptions = {}) => {
 	try {
 		const uploadedResponse = await cloudinary.uploader.upload(imageData, options);
 		return uploadedResponse.secure_url;
@@ -13,9 +13,9 @@ const uploadImage = async (imageData, options = {}) => {
 };
 
 // Enhanced file upload with accessibility verification
-const uploadFile = async (filePath, options = {}) => {
+const uploadFile = async (filePath: string, options: UploadApiOptions = {}) => {
 	try {
-		const defaultOptions = {
+		const defaultOptions: UploadApiOptions = {
 			resource_type: 'auto',
 			access_mode: 'public',
 			secure: true,
@@ -50,7 +50,7 @@ const uploadFile = async (filePath, options = {}) => {
 };
 
 // Verify if a Cloudinary URL is accessible
-const verifyFileAccessibility = async (url) => {
+const verifyFileAccessibility = async (url: string) => {
 	try {
 		const response = await axios.head(url, {
 			timeout: 10000,
@@ -73,9 +73,12 @@ const verifyFileAccessibility = async (url) => {
 	}
 };
 
-const deleteImage = async (imageUrl) => {
+const deleteImage = async (imageUrl: string) => {
 	try {
-		const imgId = imageUrl.split("/").pop().split(".")[0];
+		const imgId = imageUrl.split("/").pop()?.split(".")[0];
+		if (!imgId) {
+			throw new Error("Invalid image URL format");
+		}
 		await cloudinary.uploader.destroy(imgId);
 	} catch (error) {
 		logger.error("Error deleting image from Cloudinary", error);
@@ -84,7 +87,7 @@ const deleteImage = async (imageUrl) => {
 	}
 };
 
-const deleteImages = async (imageUrls) => {
+const deleteImages = async (imageUrls: string[]) => {
 	if (!imageUrls || imageUrls.length === 0) {
 		return;
 	}
@@ -93,7 +96,7 @@ const deleteImages = async (imageUrls) => {
 	}
 };
 
-const uploadMultipleImages = async (images) => {
+const uploadMultipleImages = async (images: string[]) => {
 	const uploadedImages: string[] = [];
 	if (!images || !Array.isArray(images) || images.length === 0) return uploadedImages;
 
@@ -101,7 +104,7 @@ const uploadMultipleImages = async (images) => {
 		try {
 			const url = await uploadImage(imageData);
 			uploadedImages.push(url);
-		} catch (error) {
+		} catch (error: any) {
 			logger.error("Error in uploadMultipleImages, continuing with rest", error);
 		}
 	}
