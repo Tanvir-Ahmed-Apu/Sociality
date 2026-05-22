@@ -11,7 +11,7 @@ const generateTokenAndSetCookie = (userId: any, res: any, sessionPath = '') => {
 	res.cookie(cookieName, token, {
 		httpOnly: true, // more secure
 		maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-		sameSite: "strict",
+		sameSite: "lax",
 		secure: process.env.NODE_ENV === "production",
 		// Use root path so cookie is available for all API requests
 		path: '/',

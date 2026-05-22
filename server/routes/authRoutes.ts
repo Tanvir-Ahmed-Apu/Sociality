@@ -1,5 +1,7 @@
 import express from 'express';
+import jwt from 'jsonwebtoken';
 import passport from '../config/passport.js';
+import User from '../models/userModel.js';
 import generateTokenAndSetCookie from '../utils/helpers/generateTokenAndSetCookie.js';
 
 const router = express.Router();
@@ -89,11 +91,9 @@ router.get('/oauth/user', async (req: any, res: any) => {
             return res.status(401).json({ error: 'No token provided' });
         }
 
-        // Verify token and get user (reuse existing JWT verification logic)
-        const jwt = await import('jsonwebtoken');
-        const decoded = jwt.default.verify(token, process.env.JWT_SECRET as string) as any;
-        const user = await import('../models/userModel.js');
-        const userData = await user.default.findById(decoded.userId).select('-password');
+        // Verify token and get user
+        const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as any;
+        const userData = await User.findById(decoded.userId).select('-password');
 
         if (!userData) {
             return res.status(401).json({ error: 'User not found' });

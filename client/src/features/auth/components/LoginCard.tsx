@@ -61,11 +61,26 @@ export default function LoginCard() {
 				},
 				body: JSON.stringify(inputs),
 			});
-			const data = await res.json();
+
+			// Safely parse JSON response
+			let data;
+			try {
+				data = await res.json();
+			} catch (parseError) {
+				const text = await res.text();
+				console.error('Login response was not JSON:', text.substring(0, 200));
+				throw new Error(res.ok ? 'Unexpected server response' : `Login failed (${res.status})`);
+			}
+
 			if (data.error) {
 				showToast("Error", data.error, "error");
 				return;
 			}
+
+			if (!res.ok) {
+				throw new Error(data.error || `Login failed (${res.status})`);
+			}
+
 			// Store user data in tab-specific storage
 			setCurrentTabUser(data);
 			setUser(data);

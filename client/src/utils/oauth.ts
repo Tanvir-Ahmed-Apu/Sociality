@@ -38,6 +38,16 @@ export const testPopupAllowed = (): boolean => !arePopupsBlocked();
 export const getOAuthMethod = (): "redirect" | "popup" =>
 	arePopupsBlocked() ? "redirect" : "popup";
 
+const safeParseJSON = async (response: Response): Promise<any> => {
+	const contentType = response.headers.get('content-type') || '';
+	if (!contentType.includes('application/json') && !contentType.includes('application/octet-stream') && contentType.includes('text/html')) {
+		const text = await response.text();
+		console.error('Expected JSON but received HTML. Response was:', text.substring(0, 200));
+		throw new Error(response.ok ? 'Unexpected server response' : 'Server error (HTML response)');
+	}
+	return response.json();
+};
+
 export const openOAuthPopup = (
 	url: string,
 	name = "oauth",
@@ -175,7 +185,10 @@ export const handleOAuthPopupCallback = () => {
 			fetch(`/api/auth/oauth/user?session=${sessionPath || ""}`, {
 				credentials: "include",
 			})
-				.then((response) => response.json())
+				.then((response) => {
+					if (!response.ok) throw new Error(`Server returned ${response.status}`);
+					return safeParseJSON(response);
+				})
 				.then((userData) => {
 					userData.sessionPath = sessionPath;
 					userData.tabId = tabId;
@@ -186,9 +199,10 @@ export const handleOAuthPopupCallback = () => {
 					);
 					window.close();
 				})
-				.catch(() => {
+				.catch((err) => {
+					console.error('OAuth popup callback fetch error:', err);
 					window.opener?.postMessage(
-						{ type: "OAUTH_ERROR", error: "Failed to fetch user data" },
+						{ type: "OAUTH_ERROR", error: err.message || "Failed to fetch user data" },
 						window.location.origin
 					);
 					window.close();
@@ -275,7 +289,7 @@ export const handleOAuthCallback = async (): Promise<User | null> => {
 
 		if (!response.ok) throw new Error("Failed to fetch user data");
 
-		const userData = await response.json();
+		const userData = await safeParseJSON(response);
 		userData.setupRequired = setupRequired === "required";
 		userData.sessionPath = sessionPath;
 		window.history.replaceState({}, document.title, window.location.pathname);

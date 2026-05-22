@@ -55,6 +55,16 @@ export const useSessionPath = () => {
   return user?.sessionPath || '';
 };
 
+const safeParseJSON = async (response: Response): Promise<any> => {
+  const contentType = response.headers.get('content-type') || '';
+  if (!contentType.includes('application/json') && !contentType.includes('text/plain') && contentType.includes('text/html')) {
+    const text = await response.text();
+    console.error('Expected JSON but received HTML. Response was:', text.substring(0, 200));
+    throw new Error(response.ok ? 'Unexpected server response' : 'Server error (HTML response)');
+  }
+  return response.json();
+};
+
 export const validateAuthentication = async () => {
   const user = getCurrentTabUser();
   if (!user) return false;
@@ -94,7 +104,7 @@ export const fetchWithSession = async (url: string, options: RequestInit = {}) =
           });
 
           if (authValidation.ok) {
-            const validatedUser = await authValidation.json();
+            const validatedUser = await safeParseJSON(authValidation);
             setCurrentTabUser(validatedUser);
 
             return fetch(urlWithSession, {
