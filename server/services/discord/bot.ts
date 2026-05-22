@@ -37,6 +37,31 @@ export async function initBot() {
       await loadDiscordBindings();
     });
 
+    client.on('interactionCreate', async (interaction: any) => {
+      try {
+        if (!interaction.isCommand()) return;
+
+        const { commandName } = interaction;
+
+        if (commandName === 'join') {
+          await handleJoinCommand(interaction);
+        } else if (commandName === 'leave') {
+          await handleLeaveCommand(interaction);
+        } else if (commandName === 'status') {
+          await handleStatusCommand(interaction);
+        }
+      } catch (err: any) {
+        logger.error('Error handling interaction:', err);
+        try {
+          if (interaction.deferred || interaction.replied) {
+            await interaction.editReply({ content: `An error occurred: ${err.message || err}` });
+          } else {
+            await interaction.reply({ content: `An error occurred: ${err.message || err}`, ephemeral: true });
+          }
+        } catch {}
+      }
+    });
+
     client.on('messageCreate', async (message) => {
       try {
         if (message.author.bot || !message.content) return;
