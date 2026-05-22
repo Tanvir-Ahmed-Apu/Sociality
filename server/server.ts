@@ -68,7 +68,7 @@ cloudinary.config({
 // CORS configuration
 const corsOptions = {
 	origin: process.env.NODE_ENV === "production"
-		? true
+		? process.env.FRONTEND_URL || true
 		: ["http://localhost:7100", "http://localhost:7101", "http://localhost:7300", "http://localhost:7301", "http://localhost:7302", "http://127.0.0.1:7100", "http://127.0.0.1:7101", "http://127.0.0.1:7300", "http://127.0.0.1:7301", "http://127.0.0.1:7302"],
 	credentials: true,
 	methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
