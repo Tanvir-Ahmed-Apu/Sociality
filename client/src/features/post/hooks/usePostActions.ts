@@ -3,6 +3,12 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { userAtom, postsAtom } from "../../../atoms";
 import useShowToast from "../../../hooks/useShowToast";
 import { Post, fetchWithSession } from "../../../utils/api";
+import {
+	appendReplyToPost,
+	fileToDataUrl,
+	toggleIdInList,
+	updatePost,
+} from "../utils/feedUpdates";
 
 interface UsePostActionsProps {
   post: Post;
@@ -62,23 +68,12 @@ export const usePostActions = ({ post, onClose }: UsePostActionsProps) => {
         return;
       }
 
-      if (!liked) {
-        const updatedPosts = posts.map((p) => {
-          if (p._id === post._id) {
-            return { ...p, likes: [...(p.likes || []), user._id] };
-          }
-          return p;
-        });
-        setPosts(updatedPosts);
-      } else {
-        const updatedPosts = posts.map((p) => {
-          if (p._id === post._id) {
-            return { ...p, likes: (p.likes || []).filter((id) => id !== user._id) };
-          }
-          return p;
-        });
-        setPosts(updatedPosts);
-      }
+      setPosts(
+        updatePost(posts, post._id, (p) => ({
+          ...p,
+          likes: toggleIdInList(p.likes, user._id, !liked),
+        }))
+      );
 
       setLiked(!liked);
     } catch (error: any) {
@@ -95,14 +90,11 @@ export const usePostActions = ({ post, onClose }: UsePostActionsProps) => {
 
   const handleImageChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event: ProgressEvent<FileReader>) => {
-        setImagePreview(event.target?.result as string);
-        setImage(file);
-      };
-      reader.readAsDataURL(file);
-    }
+    if (!file) return;
+    fileToDataUrl(file).then((url) => {
+      setImagePreview(url);
+      setImage(file);
+    });
   }, []);
 
   const handleReplyBase = useCallback(async () => {
@@ -119,15 +111,7 @@ export const usePostActions = ({ post, onClose }: UsePostActionsProps) => {
 
     setIsReplying(true);
     try {
-      let imgUrl = null;
-      if (image) {
-        const reader = new FileReader();
-        const imgPromise = new Promise<string | ArrayBuffer | null>((resolve) => {
-          reader.onload = (e) => resolve(e.target?.result || null);
-          reader.readAsDataURL(image);
-        });
-        imgUrl = await imgPromise;
-      }
+      const imgUrl = image ? await fileToDataUrl(image) : null;
 
       const res = await fetchWithSession("/api/posts/reply/" + post._id, {
         method: "POST",
@@ -146,13 +130,7 @@ export const usePostActions = ({ post, onClose }: UsePostActionsProps) => {
         return;
       }
 
-      const updatedPosts = posts.map((p) => {
-        if (p._id === post._id) {
-          return { ...p, replies: [...(p.replies || []), data] };
-        }
-        return p;
-      });
-      setPosts(updatedPosts);
+      setPosts(appendReplyToPost(posts, post._id, data));
 
       showToast("Success", "Reply posted!", "success");
 
@@ -180,18 +158,12 @@ export const usePostActions = ({ post, onClose }: UsePostActionsProps) => {
     if (isReposting) return;
     setIsReposting(true);
 
-    const optimisticUpdatedPosts = posts.map((p) => {
-      if (p._id === post._id) {
-        const currentReposts = p.reposts || [];
-        if (reposted) {
-          return { ...p, reposts: currentReposts.filter((id) => id !== user._id) };
-        } else {
-          return { ...p, reposts: [...currentReposts, user._id] };
-        }
-      }
-      return p;
-    });
-    setPosts(optimisticUpdatedPosts);
+    setPosts(
+      updatePost(posts, post._id, (p) => ({
+        ...p,
+        reposts: toggleIdInList(p.reposts, user._id, !reposted),
+      }))
+    );
     setReposted(!reposted);
 
     try {

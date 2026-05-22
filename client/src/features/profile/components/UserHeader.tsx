@@ -6,7 +6,6 @@ import { useRecoilValue } from "recoil";
 import { ChatCircle, Copy, PencilSimple, Briefcase, MapPin, CalendarBlank, Link as LinkIcon } from "phosphor-react";
 import { userAtom } from "../../../atoms";
 import { Link as RouterLink } from "react-router-dom";
-import useFollowUnfollow from "../../../hooks/useFollowUnfollow";
 import FollowButton from "./FollowButton";
 import FollowModal from "./FollowModal";
 import { useState, useEffect, useMemo } from "react";
@@ -46,8 +45,6 @@ export const UserHeader = ({ user, selectedTab, onTabChange, onUserUpdate }: Use
     const scrimColor = useColorModeValue("#ffffff", "#111111");
     const menuBorderColor = useColorModeValue("gray.100", "whiteAlpha.200");
     
-    useFollowUnfollow(user, onUserUpdate);
-
     useEffect(() => {
         const handleBackButton = () => {
             if (isProfilePicModalOpen) setIsProfilePicModalOpen(false);
@@ -175,8 +172,10 @@ export const UserHeader = ({ user, selectedTab, onTabChange, onUserUpdate }: Use
                             <HStack spacing={2}>
                                 <FollowButton
                                     userId={user._id!}
-                                    initialIsFollowing={!!currentUser?.following?.some(f => (typeof f === 'string' ? f : f?._id) === user._id)}
+                                    targetUsername={user.username}
+                                    targetName={user.name}
                                     size="sm"
+                                    onProfileRefresh={onUserUpdate}
                                 />
                                 <Button
                                     onClick={() => setIsMessageOpen(true)}

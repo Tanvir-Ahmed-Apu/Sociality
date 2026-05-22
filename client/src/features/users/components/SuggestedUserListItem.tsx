@@ -1,12 +1,15 @@
 import { Avatar, Box, Button, Flex, Text, useColorModeValue } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import useFollowUnfollow from "../../../hooks/useFollowUnfollow";
-
+import { useFollow } from "../../../hooks/useFollow";
 import { User } from "../../../utils/api";
 
 // Component specifically for list view (e.g., on Search Page)
 const SuggestedUserListItem = ({ user }: { user: User }) => {
-    const { handleFollowUnfollow, following, updating } = useFollowUnfollow(user);
+    const { toggle: handleFollowUnfollow, following, loading: updating } = useFollow({
+        targetUserId: user._id!,
+        targetUsername: user.username,
+        targetName: user.name,
+    });
 
     // Theme-aware colors
     const bgColor = useColorModeValue("white", "#1A1A1A");

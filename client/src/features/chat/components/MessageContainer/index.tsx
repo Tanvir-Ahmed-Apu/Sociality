@@ -33,7 +33,6 @@ const MessageContainer = ({
 	const containerRef = useRef<HTMLDivElement>(null);
 	const messagesEndRef = useRef<HTMLDivElement>(null);
 
-	const [showGroupSettings, setShowGroupSettings] = useState(false);
 	const [showRightSidebar, setShowRightSidebar] = useState(false);
 
 	const { bgColor, borderColor, mutedColor: mutedTextColor, timestampBg, chatContainerBg, chatDotPattern } = useChatTheme();
@@ -95,7 +94,6 @@ const MessageContainer = ({
 
 	const handleDeleteGroup = useCallback((deletedGroup: any) => {
 		setConversations(prev => prev.filter(conv => conv._id !== deletedGroup._id));
-		setShowGroupSettings(false);
 	}, [setConversations]);
 
 
@@ -236,10 +234,9 @@ const MessageContainer = ({
 						w="320px" h="full" bg={bgColor} borderLeft="1px solid" borderColor={borderColor}
 						transition="all 0.3s ease" display={{ base: "none", lg: "block" }}
 					>
-						<ChatRightSidebar 
-							user={selectedConversation} 
-							messages={messages} 
-							onOpenSettings={() => setShowGroupSettings(true)}
+						<ChatRightSidebar
+							user={selectedConversation}
+							messages={messages}
 							onUpdateGroup={handleUpdateGroup}
 							onDeleteGroup={handleDeleteGroup}
 						/>

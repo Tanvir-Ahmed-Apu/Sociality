@@ -27,8 +27,7 @@ import { CaretRight, User, LockSimple } from "phosphor-react";
 import { useSetRecoilState } from "recoil";
 import { authScreenAtom, userAtom } from "../../../atoms";
 import useShowToast from "../../../hooks/useShowToast";
-import { googleOAuthPopup } from "../../../utils/oauthPopup";
-import { handleMobileOAuth, getOAuthButtonText, getOAuthLoadingText, isMobileDevice } from "../../../utils/simpleMobileOAuth";
+import { startGoogleOAuth } from "../../../utils/oauth";
 import { setCurrentTabUser, getTabId } from "../../../utils/api";
 import { useNavigate } from "react-router-dom";
 
@@ -113,7 +112,7 @@ export default function LoginCard() {
 		};
 
 		// Use the mobile-optimized OAuth handler
-		await handleMobileOAuth(onSuccess, onError, setGoogleLoading);
+		await startGoogleOAuth(onSuccess, onError, setGoogleLoading);
 	};
 	return (
 		<Flex align={"center"} justify={"center"} w="full">

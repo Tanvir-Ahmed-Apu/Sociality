@@ -7,6 +7,12 @@ import { userAtom, postsAtom } from "../../../atoms";
 import { User, Post, fetchWithSession } from "../../../utils/api";
 import useShowToast from "../../../hooks/useShowToast";
 import { useSocket } from "../../../hooks/useSocket";
+import {
+	fileToDataUrl,
+	removeReplyFromPost,
+	updatePost,
+	updateReplyInPost,
+} from "../utils/feedUpdates";
 
 interface UseCommentProps {
   reply: any;
@@ -79,32 +85,15 @@ export const useComment = ({
         throw new Error(errorData.error || 'Failed to like/unlike comment');
       }
 
-      // Update posts state to reflect the change
-      const updatedPosts = posts.map((p: any) => {
-        if (p._id === postId) {
-          return {
-            ...p,
-            replies: p.replies.map((r: any) => {
-              if (r._id === reply._id) {
-                // Update likes array based on current action
-                const isCurrentlyLiked = r.likes.includes(currentUser?._id);
-                const newLikes = isCurrentlyLiked
-                  ? r.likes.filter((id: any) => id !== currentUser?._id)
-                  : [...(r.likes || []), currentUser?._id];
-
-                return {
-                  ...r,
-                  likes: newLikes
-                };
-              }
-              return r;
-            })
-          };
-        }
-        return p;
-      });
-
-      setPosts(updatedPosts);
+      setPosts(
+        updateReplyInPost(posts, postId, reply._id, (r) => {
+          const isCurrentlyLiked = (r.likes as string[]).includes(currentUser!._id);
+          const newLikes = isCurrentlyLiked
+            ? (r.likes as string[]).filter((id) => id !== currentUser!._id)
+            : [...((r.likes as string[]) || []), currentUser!._id];
+          return { ...r, likes: newLikes };
+        })
+      );
       showToast("Success", !liked ? "Comment liked" : "Comment unliked", "success");
     } catch (error: any) {
       showToast("Error", error.message || "Failed to like/unlike comment", "error");
@@ -133,16 +122,7 @@ export const useComment = ({
     setIsSubmitting(true);
 
     try {
-      // Convert image to base64 if it exists
-      let imgUrl = null;
-      if (replyImage) {
-        const reader = new FileReader();
-        const imgPromise = new Promise((resolve) => {
-          reader.onload = (e: any) => resolve(e.target.result);
-          reader.readAsDataURL(replyImage);
-        });
-        imgUrl = (await imgPromise) as string;
-      }
+      const imgUrl = replyImage ? await fileToDataUrl(replyImage) : null;
 
       // Create new reply object with proper fields
       const newReply = {
@@ -214,17 +194,7 @@ export const useComment = ({
 
     setIsDeleting(true);
     try {
-      // Optimistic update
-      const updatedPosts = posts.map((p: any) => {
-        if (p._id === postId) {
-          return {
-            ...p,
-            replies: p.replies.filter((r: any) => r._id !== reply._id)
-          };
-        }
-        return p;
-      });
-      setPosts(updatedPosts);
+      setPosts(removeReplyFromPost(posts, postId, reply._id));
 
       setIsDeleteAlertOpen(false);
 
@@ -241,16 +211,9 @@ export const useComment = ({
     } catch (error: any) {
       showToast("Error", error.message || "Failed to delete comment", "error");
 
-      // Revert the optimistic update on error
       const originalPost = posts.find((p: any) => p._id === postId);
       if (originalPost) {
-        const updatedPosts = posts.map((p: any) => {
-          if (p._id === postId) {
-            return originalPost;
-          }
-          return p;
-        });
-        setPosts(updatedPosts);
+        setPosts(updatePost(posts, postId, () => originalPost));
       }
     } finally {
       setIsDeleting(false);
@@ -330,16 +293,7 @@ export const useComment = ({
       }
 
       if (data.type === "commentDeleted" && data.commentId === reply._id) {
-        const updatedPosts = posts.map((p: any) => {
-          if (p._id === postId) {
-            return {
-              ...p,
-              replies: p.replies.filter((r: any) => r._id !== reply._id)
-            };
-          }
-          return p;
-        });
-        setPosts(updatedPosts);
+        setPosts(removeReplyFromPost(posts, postId, reply._id));
       }
     };
 
