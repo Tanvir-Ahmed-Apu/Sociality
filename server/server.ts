@@ -132,7 +132,7 @@ app.get("/health", (req: express.Request, res: express.Response) => {
 // http://localhost:5000 => backend, http://localhost:7100 => frontend
 
 if (process.env.NODE_ENV === "production") {
-	const frontendDistPath = path.join(__dirname, "../frontend/dist"); // Correct path to frontend build
+	const frontendDistPath = path.join(__dirname, "../client/dist"); // Correct path to frontend build
 	app.use(express.static(frontendDistPath));
 
 	// react app
