@@ -34,10 +34,12 @@ export const initializeSocket = (userId: string | undefined): { socket: Socket |
     };
   }
 
-  // Use relative URL to leverage Vite proxy in development
-  const socketUrl = '/'; // Always use relative URL to leverage proxy
+  // In production, connect directly to backend server for WebSocket
+  // In development, use relative URL to leverage Vite proxy
+  const backendUrl = import.meta.env.VITE_API_BASE_URL || '';
+  const socketUrl = backendUrl || '/';
 
-  console.log("Creating new socket connection to:", socketUrl, "(via proxy)");
+  console.log("Creating new socket connection to:", socketUrl);
 
   // Create new socket instance with optimized configuration
   socketInstance = io(socketUrl, {

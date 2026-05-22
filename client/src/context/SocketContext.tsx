@@ -53,10 +53,10 @@ export const SocketContextProvider = ({ children }: { children: React.ReactNode 
 
     console.log("Initializing socket connection for user:", user._id);
 
-    // Use relative URL to leverage Vite proxy
-    const socketUrl = '/'; // Always use relative URL to leverage proxy
+    // In production, connect directly to backend; in dev, use Vite proxy
+    const socketUrl = import.meta.env.VITE_API_BASE_URL || '/';
 
-    console.log("Socket URL:", socketUrl, "(via proxy)");
+    console.log("Socket URL:", socketUrl);
 
     // Initialize socket connection
     const { socket: socketInstance, status } = initializeSocket(user._id);
@@ -65,8 +65,6 @@ export const SocketContextProvider = ({ children }: { children: React.ReactNode 
     setSocket(socketInstance);
     setConnectionStatus(status);
 
-    // Store socket URL for debugging
-    window.socketUrl = socketUrl;
 
     // Log socket instance
     console.log("Socket instance:", socketInstance ? "Created" : "Failed to create");

@@ -10,7 +10,7 @@ const server = http.createServer(app);
 const io = new Server(server, {
 	cors: {
 		origin: process.env.NODE_ENV === "production" 
-			? false 
+			? (process.env.FRONTEND_URL || '*') 
 			: [
 				"http://localhost:7100", 
 				"http://localhost:7101",
