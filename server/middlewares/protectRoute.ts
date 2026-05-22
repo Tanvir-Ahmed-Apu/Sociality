@@ -13,7 +13,16 @@ const protectRoute = async (req: Request, res: Response, next: NextFunction) => 
 		const sessionPath = (req.query.session as string) || '';
 		const cookieName = sessionPath ? `jwt-sociality${sessionPath.replace(/\//g, '-')}` : 'jwt-sociality';
 
+		// Try cookies first, then Authorization header (for cross-origin requests)
 		let token = req.cookies[cookieName] || req.cookies.jwt || req.cookies['jwt-sociality'];
+
+		// Fallback to Authorization header for cross-origin requests where cookies may be blocked
+		if (!token) {
+			const authHeader = req.headers.authorization;
+			if (authHeader && authHeader.startsWith('Bearer ')) {
+				token = authHeader.substring(7);
+			}
+		}
 
 		if (!token) {
 			return res.status(401).json({ message: "Unauthorized - No token provided" });

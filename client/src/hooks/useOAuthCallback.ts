@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { userAtom } from '../atoms';
 import useShowToast from './useShowToast';
 import { setCurrentTabUser } from '../utils/api';
+import { setToken } from '../utils/tokenStore';
 import { handleOAuthCallback, isOAuthCallback } from '../utils/simpleMobileOAuth';
 
 const useOAuthCallback = () => {
@@ -35,6 +36,11 @@ const useOAuthCallback = () => {
                 const userData = await handleOAuthCallback();
 
                 if (userData) {
+                    // Store token for cross-origin API calls
+                    const userDataAny = userData as any;
+                    if (userDataAny.token) {
+                        setToken(userDataAny.token);
+                    }
                     // Store in tab-specific localStorage using utility function
                     setCurrentTabUser(userData);
 

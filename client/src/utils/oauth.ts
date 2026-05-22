@@ -1,5 +1,6 @@
 import { getTabId, setCurrentTabUser, User } from "./api";
 import { apiFetch } from "./apiBase";
+import { setToken } from "./tokenStore";
 
 export const isMobileDevice = (): boolean => {
 	const userAgent =
@@ -196,6 +197,9 @@ export const handleOAuthPopupCallback = () => {
 					userData.sessionPath = sessionPath;
 					userData.tabId = tabId;
 					userData.setupRequired = setupRequired === "required";
+					if (userData.token) {
+						setToken(userData.token);
+					}
 					window.opener?.postMessage(
 						{ type: "OAUTH_SUCCESS", userData },
 						window.location.origin
@@ -295,6 +299,9 @@ export const handleOAuthCallback = async (): Promise<User | null> => {
 		const userData = await safeParseJSON(response);
 		userData.setupRequired = setupRequired === "required";
 		userData.sessionPath = sessionPath;
+		if (userData.token) {
+			setToken(userData.token);
+		}
 		window.history.replaceState({}, document.title, window.location.pathname);
 		return userData;
 	}

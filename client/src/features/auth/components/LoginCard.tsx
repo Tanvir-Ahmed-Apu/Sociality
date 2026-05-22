@@ -30,6 +30,7 @@ import useShowToast from "../../../hooks/useShowToast";
 import { startGoogleOAuth } from "../../../utils/oauth";
 import { setCurrentTabUser, getTabId } from "../../../utils/api";
 import { apiFetch } from "../../../utils/apiBase";
+import { setToken } from "../../../utils/tokenStore";
 import { useNavigate } from "react-router-dom";
 
 export default function LoginCard() {
@@ -82,7 +83,10 @@ export default function LoginCard() {
 				throw new Error(data.error || `Login failed (${res.status})`);
 			}
 
-			// Store user data in tab-specific storage
+			// Store user data and JWT token
+			if (data.token) {
+				setToken(data.token);
+			}
 			setCurrentTabUser(data);
 			setUser(data);
 		} catch (error: any) {

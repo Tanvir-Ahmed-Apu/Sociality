@@ -2,6 +2,7 @@ import { useRecoilValue } from 'recoil';
 import { userAtom } from '../atoms';
 import { User } from '../types/models';
 import { apiFetch } from './apiBase';
+import { clearToken } from './tokenStore';
 
 export const getTabId = () => {
   let tabId = sessionStorage.getItem('tabId');
@@ -16,6 +17,7 @@ export const clearCurrentTabAuth = () => {
   const tabId = getTabId();
   const userKey = `user-threads-${tabId}`;
   localStorage.removeItem(userKey);
+  clearToken();
 };
 
 export const getCurrentTabUser = (): User | null => {

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 import generateTokenAndSetCookie from "../utils/helpers/generateTokenAndSetCookie.js";
 import logger from "../utils/logger.js";
 import suggestionCache from "../utils/cache.js";
@@ -37,7 +38,7 @@ const signupUser = async (req: Request, res: Response) => {
 		suggestionCache.clear();
 
 		const sessionPath = (req.query.session as string) || '';
-		generateTokenAndSetCookie(newUser._id, res, sessionPath);
+		const token = generateTokenAndSetCookie(newUser._id, res, sessionPath);
 
 		return res.status(201).json({
 			_id: newUser._id,
@@ -50,7 +51,8 @@ const signupUser = async (req: Request, res: Response) => {
 			location: newUser.location || "",
 			website: newUser.website || "",
 			isProfileComplete: true,
-			sessionPath
+			sessionPath,
+			token
 		});
 	} catch (err: any) {
 		logger.error("Error in signupUser", err);
@@ -91,7 +93,7 @@ const loginUser = async (req: Request, res: Response) => {
 		}
 
 		const sessionPath = (req.query.session as string) || '';
-		generateTokenAndSetCookie(user._id, res, sessionPath);
+		const token = generateTokenAndSetCookie(user._id, res, sessionPath);
 		suggestionCache.clear();
 
 		return res.status(200).json({
@@ -105,7 +107,8 @@ const loginUser = async (req: Request, res: Response) => {
 			location: user.location || "",
 			website: user.website || "",
 			isProfileComplete: user.isProfileComplete ?? true,
-			sessionPath
+			sessionPath,
+			token
 		});
 	} catch (error: any) {
 		logger.error("Error in loginUser", error);

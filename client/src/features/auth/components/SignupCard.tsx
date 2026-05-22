@@ -22,6 +22,7 @@ import { authScreenAtom, userAtom } from "../../../atoms";
 import useShowToast from "../../../hooks/useShowToast";
 import { setCurrentTabUser, getTabId } from "../../../utils/api";
 import { apiFetch } from "../../../utils/apiBase";
+import { setToken } from "../../../utils/tokenStore";
 import { X, CaretDown, User, EnvelopeSimple, LockSimple, Hash } from "phosphor-react";
 
 export default function SignupCard() {
@@ -88,6 +89,9 @@ export default function SignupCard() {
 				return;
 			}
 			showToast("Success", "Account created successfully!", "success");
+			if (data.token) {
+				setToken(data.token);
+			}
 			setCurrentTabUser(data);
 			setUser(data);
 		} catch (error: any) {

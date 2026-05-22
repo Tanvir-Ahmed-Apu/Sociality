@@ -108,7 +108,8 @@ router.get('/oauth/user', async (req: any, res: any) => {
             profilePic: userData.profilePic,
             isGoogleUser: userData.isGoogleUser,
             isProfileComplete: userData.isProfileComplete,
-            sessionPath: sessionPath // Include session path in response
+            sessionPath: sessionPath, // Include session path in response
+            token // Return token for cross-origin auth
         });
     } catch (error) {
         console.error('OAuth user fetch error:', error);
