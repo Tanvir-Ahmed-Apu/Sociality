@@ -9,11 +9,11 @@ import {
 	toggleFollowApi,
 } from "../../../utils/follow";
 import type { User } from "../../../types/models";
-import type { FollowTab } from "../components/follow-modal/types";
+import type { FollowTab } from "../components/followModal/types";
 import {
 	buildFollowingMap,
 	syncFollowingMapForUsers,
-} from "../components/follow-modal/utils";
+} from "../components/followModal/utils";
 
 interface UseFollowModalOptions {
 	isOpen: boolean;

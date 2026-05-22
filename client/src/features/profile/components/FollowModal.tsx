@@ -1,2 +1,2 @@
-export { default } from "./follow-modal/FollowModal";
-export type { FollowModalProps } from "./follow-modal/types";
+export { default } from "./followModal/FollowModal";
+export type { FollowModalProps } from "./followModal/types";
