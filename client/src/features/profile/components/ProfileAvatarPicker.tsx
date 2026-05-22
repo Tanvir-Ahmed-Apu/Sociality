@@ -94,7 +94,7 @@ export const ProfileAvatarPicker = ({
       <Input
         type="file"
         hidden
-        ref={fileRef}
+        ref={fileRef as any}
         onChange={onProfilePicChange}
         accept="image/*"
       />

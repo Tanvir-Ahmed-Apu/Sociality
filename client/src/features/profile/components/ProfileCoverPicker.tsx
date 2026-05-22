@@ -69,7 +69,7 @@ export const ProfileCoverPicker = ({
         <Input
           type="file"
           hidden
-          ref={coverFileRef}
+          ref={coverFileRef as any}
           onChange={onCoverChange}
           accept="image/*"
         />

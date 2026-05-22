@@ -17,7 +17,7 @@ const FollowModal = ({
   onClose,
   username,
   onUserUpdate,
-  initialTab = 0,
+  initialTab = 0 as FollowTab,
 }: FollowModalProps) => {
   const modal = useFollowModal({
     isOpen,

@@ -54,8 +54,8 @@ export const useFollowModal = ({
 		const data = await fetchUserProfile(username);
 		if (!data) return null;
 
-		if (Array.isArray(data.followers)) setFollowers(data.followers);
-		if (Array.isArray(data.following)) setFollowing(data.following);
+		if (Array.isArray(data.followers)) setFollowers(data.followers.filter((u): u is User => typeof u !== 'string'));
+		if (Array.isArray(data.following)) setFollowing(data.following.filter((u): u is User => typeof u !== 'string'));
 		onUserUpdate?.(data);
 		return data;
 	}, [username, onUserUpdate]);
