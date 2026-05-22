@@ -232,7 +232,7 @@ async function deleteMessage(req: any, res: Response) {
 
 				if (recipientId) {
 					// Use the new sendMessageToUser function
-					sendMessageToUser(recipientId, "messageDeleted", {
+					sendMessageToUser(recipientId.toString(), "messageDeleted", {
 						messageId: message._id,
 						deleteForEveryone: true
 					});

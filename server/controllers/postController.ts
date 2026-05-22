@@ -261,7 +261,7 @@ const replyToPost = async (req: any, res: Response) => {
 		};
 
 		// Add the reply to the beginning of the array for immediate visibility
-		post.replies.unshift(reply);
+		post.replies.unshift(reply as any);
 		const savedPost = await post.save();
 
 		// Get the saved reply with its generated _id
@@ -596,7 +596,7 @@ const replyToComment = async (req: any, res: Response) => {
 		}
 
 		// Find the comment to reply to
-		const commentToReply = post.replies.id(commentId);
+		const commentToReply = (post.replies as any).id(commentId);
 		if (!commentToReply) {
 			return res.status(404).json({ error: "Comment not found" });
 		}
@@ -618,7 +618,7 @@ const replyToComment = async (req: any, res: Response) => {
 		};
 
 		// Add the reply to the beginning of the array for immediate visibility
-		post.replies.unshift(reply);
+		post.replies.unshift(reply as any);
 		await post.save();
 
 		// Create notification for the comment owner (if it's not the user's own comment)
@@ -666,7 +666,7 @@ const likeUnlikeComment = async (req: any, res: Response) => {
 		}
 
 		// Find the comment in the post's replies array
-		const comment = post.replies.id(commentId);
+		const comment = (post.replies as any).id(commentId);
 
 		if (!comment) {
 			return res.status(404).json({ error: "Comment not found" });
@@ -720,7 +720,7 @@ const deleteComment = async (req: any, res: Response) => {
 		}
 
 		// Find the comment
-		const comment = post.replies.id(commentId);
+		const comment = (post.replies as any).id(commentId);
 		if (!comment) {
 			return res.status(404).json({ error: "Comment not found" });
 		}
@@ -779,6 +779,9 @@ const markPostNotInterested = async (req, res) => {
 
 		// Add post to user's notInterestedPosts array if not already there
 		const user = await User.findById(userId);
+		if (!user) {
+			return res.status(404).json({ error: "User not found" });
+		}
 		if (!user.notInterestedPosts.includes(postId)) {
 			user.notInterestedPosts.push(postId);
 			await user.save();

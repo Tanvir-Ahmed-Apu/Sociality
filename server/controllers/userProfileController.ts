@@ -116,7 +116,7 @@ const updateUser = async (req: any, res: Response) => {
 			{ arrayFilters: [{ "reply.userId": userId }] }
 		);
 
-		user.password = null;
+		user.password = undefined;
 		return res.status(200).json(user);
 	} catch (err: any) {
 		logger.error("Error in updateUser", err);

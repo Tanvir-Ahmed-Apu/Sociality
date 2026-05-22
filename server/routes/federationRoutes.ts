@@ -26,7 +26,7 @@ router.get("/rooms", async (req, res) => {
         allRooms.push({
           roomId: localRoom._id.toString(),
           name: localRoom.name,
-          peers: localRoom.federationSettings.registeredPeers || []
+          peers: localRoom.federationSettings?.registeredPeers || []
         });
       }
     });

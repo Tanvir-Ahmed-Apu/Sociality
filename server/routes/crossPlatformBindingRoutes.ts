@@ -7,7 +7,7 @@ const router = express.Router();
 router.get("/rooms/:roomId/telegram", async (req, res) => {
   try {
     const { roomId } = req.params;
-    const binding = await TelegramBinding.findByRoomId(roomId);
+    const binding = await (TelegramBinding as any).findByRoomId(roomId);
 
     if (!binding) {
       return res.json({ success: true, bound: false, message: 'No Telegram chat bound to this room' });

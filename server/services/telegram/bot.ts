@@ -190,7 +190,7 @@ async function handleLeaveCommand(msg: any) {
     }
 
     const roomId = binding.roomId;
-    await binding.deactivate();
+    await (binding as any).deactivate();
     telegramChats.delete(roomId);
     roomMappings.delete(chatId.toString());
 

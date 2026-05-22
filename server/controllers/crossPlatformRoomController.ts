@@ -12,7 +12,7 @@ export class CrossPlatformRoomController {
    */
   async createRoom(req: AuthRequest, res: Response): Promise<void> {
     try {
-      const userId = req.user?._id;
+      const userId = req.user!._id;
       const data: CreateRoomRequest = req.body;
 
       const room = await CrossPlatformRoomService.createRoom(userId, data);
@@ -33,7 +33,7 @@ export class CrossPlatformRoomController {
    */
   async getUserRooms(req: AuthRequest, res: Response): Promise<void> {
     try {
-      const userId = req.user?._id;
+      const userId = req.user!._id;
       const rooms = await CrossPlatformRoomService.getUserRooms(userId);
 
       res.json({ success: true, rooms });
@@ -53,8 +53,8 @@ export class CrossPlatformRoomController {
   async joinRoom(req: AuthRequest, res: Response): Promise<void> {
     try {
       const { roomId } = req.params;
-      const userId = req.user?._id;
-      const username = req.user?.username;
+      const userId = req.user!._id;
+      const username = req.user!.username;
 
       const result = await CrossPlatformRoomService.joinRoom(roomId, userId, username);
 
@@ -84,7 +84,7 @@ export class CrossPlatformRoomController {
   async getRoomDetails(req: AuthRequest, res: Response): Promise<void> {
     try {
       const { roomId } = req.params;
-      const userId = req.user?._id;
+      const userId = req.user!._id;
 
       const room = await CrossPlatformRoomService.getRoomDetails(roomId, userId);
 
@@ -112,7 +112,7 @@ export class CrossPlatformRoomController {
   async getRoomParticipants(req: AuthRequest, res: Response): Promise<void> {
     try {
       const { roomId } = req.params;
-      const userId = req.user?._id;
+      const userId = req.user!._id;
 
       const result = await CrossPlatformRoomService.getRoomParticipants(roomId, userId);
 
@@ -140,7 +140,7 @@ export class CrossPlatformRoomController {
   async updateRoomName(req: AuthRequest, res: Response): Promise<void> {
     try {
       const { roomId } = req.params;
-      const userId = req.user?._id;
+      const userId = req.user!._id;
       const data: UpdateRoomNameRequest = req.body;
 
       const name = await CrossPlatformRoomService.updateRoomName(roomId, userId, data.name);
@@ -173,7 +173,7 @@ export class CrossPlatformRoomController {
   async updateRoomPhoto(req: AuthRequest, res: Response): Promise<void> {
     try {
       const { roomId } = req.params;
-      const userId = req.user?._id;
+      const userId = req.user!._id;
       const data: UpdateRoomPhotoRequest = req.body;
 
       const groupPhoto = await CrossPlatformRoomService.updateRoomPhoto(roomId, userId, data.photo);
@@ -206,7 +206,7 @@ export class CrossPlatformRoomController {
   async deleteRoom(req: AuthRequest, res: Response): Promise<void> {
     try {
       const { roomId } = req.params;
-      const userId = req.user?._id;
+      const userId = req.user!._id;
 
       await CrossPlatformRoomService.deleteRoom(roomId, userId);
 
