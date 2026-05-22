@@ -1,4 +1,5 @@
 import { getTabId, setCurrentTabUser, User } from "./api";
+import { apiFetch } from "./apiBase";
 
 export const isMobileDevice = (): boolean => {
 	const userAgent =
@@ -37,6 +38,9 @@ export const testPopupAllowed = (): boolean => !arePopupsBlocked();
 
 export const getOAuthMethod = (): "redirect" | "popup" =>
 	arePopupsBlocked() ? "redirect" : "popup";
+
+// Production backend URL for Google OAuth redirects (page navigation, not fetch)
+const getBackendUrl = () => import.meta.env.VITE_API_BASE_URL || '';
 
 const safeParseJSON = async (response: Response): Promise<any> => {
 	const contentType = response.headers.get('content-type') || '';
@@ -141,9 +145,10 @@ export const googleOAuthPopup = (
 	useRedirectFallback = false
 ): Promise<User> => {
 	return new Promise((resolve, reject) => {
+		const backendUrl = getBackendUrl();
 		if (arePopupsBlocked()) {
 			if (useRedirectFallback) {
-				window.location.href = "/api/auth/google";
+				window.location.href = `${backendUrl}/api/auth/google`;
 				return;
 			}
 			reject(
@@ -154,7 +159,7 @@ export const googleOAuthPopup = (
 			return;
 		}
 
-		openOAuthPopup("/api/auth/google/popup", "google_oauth", {
+		openOAuthPopup(`${backendUrl}/api/auth/google/popup`, "google_oauth", {
 			width: 500,
 			height: 600,
 		})
@@ -164,7 +169,7 @@ export const googleOAuthPopup = (
 					useRedirectFallback &&
 					error.message.includes("Popup blocked")
 				) {
-					window.location.href = "/api/auth/google";
+					window.location.href = `${backendUrl}/api/auth/google`;
 					return;
 				}
 				reject(error);
@@ -182,9 +187,7 @@ export const handleOAuthPopupCallback = () => {
 		const tabId = urlParams.get("tabId");
 
 		if (oauthSuccess === "success") {
-			fetch(`/api/auth/oauth/user?session=${sessionPath || ""}`, {
-				credentials: "include",
-			})
+			apiFetch(`/api/auth/oauth/user?session=${sessionPath || ""}`)
 				.then((response) => {
 					if (!response.ok) throw new Error(`Server returned ${response.status}`);
 					return safeParseJSON(response);
@@ -232,12 +235,13 @@ export const handleOAuthPopupCallback = () => {
 
 const redirectToGoogleAuth = () => {
 	sessionStorage.setItem("oauth_redirect_time", Date.now().toString());
+	const backendUrl = getBackendUrl();
 	if (isMobileDevice()) {
 		setTimeout(() => {
-			window.location.href = "/api/auth/google";
+			window.location.href = `${backendUrl}/api/auth/google`;
 		}, 500);
 	} else {
-		window.location.href = "/api/auth/google";
+		window.location.href = `${backendUrl}/api/auth/google`;
 	}
 };
 
@@ -282,9 +286,8 @@ export const handleOAuthCallback = async (): Promise<User | null> => {
 	const sessionPath = urlParams.get("session");
 
 	if (oauthSuccess === "success") {
-		const response = await fetch(
-			`/api/auth/oauth/user?session=${sessionPath || ""}`,
-			{ credentials: "include" }
+		const response = await apiFetch(
+			`/api/auth/oauth/user?session=${sessionPath || ""}`
 		);
 
 		if (!response.ok) throw new Error("Failed to fetch user data");

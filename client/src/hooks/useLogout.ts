@@ -1,6 +1,7 @@
 import { clearCurrentTabAuth, getTabId } from "../utils/api";
 import { useSetRecoilState } from "recoil";
 import { userAtom } from "../atoms";
+import { apiFetch } from "../utils/apiBase";
 import useShowToast from "./useShowToast";
 import { useNavigate } from "react-router-dom";
 
@@ -11,7 +12,7 @@ const useLogout = () => {
 
 	const logout = async () => {
 		try {
-			const res = await fetch(`/api/users/logout?session=${getTabId()}`, {
+			const res = await apiFetch(`/api/users/logout?session=${getTabId()}`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",

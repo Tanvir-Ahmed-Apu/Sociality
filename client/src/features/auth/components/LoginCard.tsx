@@ -29,6 +29,7 @@ import { authScreenAtom, userAtom } from "../../../atoms";
 import useShowToast from "../../../hooks/useShowToast";
 import { startGoogleOAuth } from "../../../utils/oauth";
 import { setCurrentTabUser, getTabId } from "../../../utils/api";
+import { apiFetch } from "../../../utils/apiBase";
 import { useNavigate } from "react-router-dom";
 
 export default function LoginCard() {
@@ -54,7 +55,7 @@ export default function LoginCard() {
 	const handleLogin = async () => {
 		setLoading(true);
 		try {
-			const res = await fetch(`/api/users/login?session=${getTabId()}`, {
+		const res = await apiFetch(`/api/users/login?session=${getTabId()}`, {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",

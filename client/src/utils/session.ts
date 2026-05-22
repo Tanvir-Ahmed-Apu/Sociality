@@ -1,6 +1,7 @@
 import { useRecoilValue } from 'recoil';
 import { userAtom } from '../atoms';
 import { User } from '../types/models';
+import { apiFetch } from './apiBase';
 
 export const getTabId = () => {
   let tabId = sessionStorage.getItem('tabId');
@@ -70,9 +71,7 @@ export const validateAuthentication = async () => {
   if (!user) return false;
 
   try {
-    const response = await fetch('/api/auth/oauth/user' + (user.sessionPath ? `?session=${user.sessionPath}` : ''), {
-      credentials: 'include'
-    });
+    const response = await apiFetch('/api/auth/oauth/user' + (user.sessionPath ? `?session=${user.sessionPath}` : ''));
     return response.ok;
   } catch (error) {
     console.error('Authentication validation failed:', error);
@@ -89,9 +88,8 @@ export const fetchWithSession = async (url: string, options: RequestInit = {}) =
     url;
 
   try {
-    const response = await fetch(urlWithSession, {
+    const response = await apiFetch(urlWithSession, {
       ...options,
-      credentials: 'include'
     });
 
     if (response.status === 401) {
@@ -99,17 +97,14 @@ export const fetchWithSession = async (url: string, options: RequestInit = {}) =
 
       if (user && user.isProfileComplete && sessionPath) {
         try {
-          const authValidation = await fetch('/api/auth/oauth/user' + (sessionPath ? `?session=${sessionPath}` : ''), {
-            credentials: 'include'
-          });
+          const authValidation = await apiFetch('/api/auth/oauth/user' + (sessionPath ? `?session=${sessionPath}` : ''));
 
           if (authValidation.ok) {
             const validatedUser = await safeParseJSON(authValidation);
             setCurrentTabUser(validatedUser);
 
-            return fetch(urlWithSession, {
+            return apiFetch(urlWithSession, {
               ...options,
-              credentials: 'include'
             });
           }
         } catch (validationError) {
@@ -120,9 +115,8 @@ export const fetchWithSession = async (url: string, options: RequestInit = {}) =
       clearCurrentTabAuth();
 
       if (sessionPath) {
-        return fetch(url, {
+        return apiFetch(url, {
           ...options,
-          credentials: 'include'
         });
       }
     }

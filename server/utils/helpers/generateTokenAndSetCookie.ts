@@ -12,7 +12,7 @@ const generateTokenAndSetCookie = (userId: any, res: any, sessionPath = '') => {
 		httpOnly: true, // more secure
 		maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
 		sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
-		//secure: process.env.NODE_ENV === "production",
+		secure: process.env.NODE_ENV === "production",
 		// Use root path so cookie is available for all API requests
 		path: '/',
 	});

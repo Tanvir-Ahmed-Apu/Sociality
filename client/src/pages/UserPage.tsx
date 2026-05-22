@@ -3,6 +3,7 @@ import { UserHeader } from "../features/profile/components/UserHeader";
 import ContentCard from "../components/ui/ContentCard";
 import { useParams } from "react-router-dom";
 import useShowToast from "../hooks/useShowToast";
+import { apiFetch } from "../utils/apiBase";
 import { Flex, Spinner, useColorModeValue, Text, Box } from "@chakra-ui/react";
 import Post from "../features/post/components/Post";
 import useGetUserProfile from "../hooks/useGetUserProfile";
@@ -67,7 +68,7 @@ const UserPage = () => {
             }
 
             try {
-                const res = await fetch(apiUrl);
+                const res = await apiFetch(apiUrl);
 
                 if (res.ok) {
                     const data = await res.json(); // Only parse JSON if response is OK

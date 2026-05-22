@@ -21,6 +21,7 @@ import { useSetRecoilState } from "recoil";
 import { authScreenAtom, userAtom } from "../../../atoms";
 import useShowToast from "../../../hooks/useShowToast";
 import { setCurrentTabUser, getTabId } from "../../../utils/api";
+import { apiFetch } from "../../../utils/apiBase";
 import { X, CaretDown, User, EnvelopeSimple, LockSimple, Hash } from "phosphor-react";
 
 export default function SignupCard() {
@@ -76,7 +77,7 @@ export default function SignupCard() {
 				email: inputs.email.trim().toLowerCase(),
 				password: inputs.password,
 			};
-			const res = await fetch(`/api/users/signup?session=${getTabId()}`, {
+			const res = await apiFetch(`/api/users/signup?session=${getTabId()}`, {
 				method: "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify(payload),
