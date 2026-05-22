@@ -10,7 +10,7 @@ import { useFollowModal } from "../../hooks/useFollowModal";
 import { FollowModalTabs } from "./FollowModalTabs";
 import { FollowersList } from "./FollowersList";
 import { FollowingList } from "./FollowingList";
-import type { FollowModalProps } from "./types";
+import type { FollowModalProps, FollowTab } from "./types";
 
 const FollowModal = ({
   isOpen,

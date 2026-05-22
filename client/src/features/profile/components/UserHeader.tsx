@@ -8,6 +8,7 @@ import { userAtom } from "../../../atoms";
 import { Link as RouterLink } from "react-router-dom";
 import FollowButton from "./FollowButton";
 import FollowModal from "./FollowModal";
+import type { FollowTab } from "./followModal/types";
 import { useState, useEffect, useMemo } from "react";
 import { fetchWithSession } from "../../../utils/api";
 import useUserEvents from "../../../hooks/useUserEvents";
@@ -34,7 +35,7 @@ export const UserHeader = ({ user, selectedTab, onTabChange, onUserUpdate }: Use
     const [message, setMessage] = useState("");
     const [followersCount, setFollowersCount] = useState(0);
     const [followingCount, setFollowingCount] = useState(0);
-    const [activeFollowTab, setActiveFollowTab] = useState(0); // 0 for followers, 1 for following
+    const [activeFollowTab, setActiveFollowTab] = useState<FollowTab>(0); // 0 for followers, 1 for following
 
     const { subscribeToUserUpdates, emitUserUpdate } = useUserEvents();
     const showToast = useShowToast();

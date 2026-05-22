@@ -5,7 +5,7 @@ export interface FollowModalProps {
   onClose: () => void;
   username: string;
   onUserUpdate?: (user: User) => void;
-  initialTab?: number;
+  initialTab?: FollowTab;
 }
 
 export type FollowTab = 0 | 1;
