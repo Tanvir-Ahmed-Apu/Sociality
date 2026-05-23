@@ -18,6 +18,29 @@ export class RoomParticipantService {
       .populate('creator', 'username name profilePic')
       .lean();
 
+    const roomIds = userRooms.map(room => room.roomId);
+    const latestMessages = roomIds.length
+      ? await CrossPlatformMessage.aggregate([
+        {
+          $match: {
+            roomId: { $in: roomIds },
+            deletedForEveryone: { $ne: true },
+            deletedFor: { $nin: [userId.toString()] }
+          }
+        },
+        { $sort: { createdAt: -1 } },
+        {
+          $group: {
+            _id: "$roomId",
+            message: { $first: "$$ROOT" }
+          }
+        }
+      ])
+      : [];
+    const latestMessageByRoomId = new Map(
+      latestMessages.map(({ _id, message }: any) => [_id, message])
+    );
+
     return userRooms.map(room => ({
       roomId: room.roomId,
       roomCode: room.roomCode || "",
@@ -27,7 +50,8 @@ export class RoomParticipantService {
       peers: room.federationSettings?.registeredPeers || [],
       participantCount: room.participants?.length || 0,
       isPrivate: room.settings?.isPrivate || false,
-      lastActivity: room.lastActivity
+      lastActivity: room.lastActivity,
+      lastMessage: this.formatLastMessage(latestMessageByRoomId.get(room.roomId))
     }));
   }
 
@@ -239,6 +263,26 @@ export class RoomParticipantService {
         messageCount: user.messageCount,
         isOnline: false
       }));
+  }
+
+  private formatLastMessage(message: any) {
+    if (!message) return undefined;
+
+    const attachmentText = message.img
+      ? "Image"
+      : message.file
+        ? message.fileName || "File"
+        : "";
+
+    return {
+      text: message.text || attachmentText,
+      sender: message.sender,
+      seen: true,
+      img: message.img || undefined,
+      file: message.file || undefined,
+      fileName: message.fileName || undefined,
+      createdAt: message.createdAt
+    };
   }
 
   private generateProfilePic(

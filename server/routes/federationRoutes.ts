@@ -73,7 +73,7 @@ router.post("/rooms", async (req, res) => {
 
     // Register room with federation registry
     const federationRegistryUrl = process.env.FEDERATION_REGISTRY_URL || 'http://localhost:7300';
-    const platformUrl = process.env.PLATFORM_URL || 'http://localhost:5000';
+    const platformUrl = process.env.PLATFORM_URL || `http://localhost:${process.env.PORT || 5000}`;
 
     try {
       await axios.post(`${federationRegistryUrl}/federation/rooms`, {
@@ -189,7 +189,7 @@ router.post("/rooms/:roomId/messages", async (req, res) => {
 
     // Send to federation registry for relay
     const federationRegistryUrl = process.env.FEDERATION_REGISTRY_URL || 'http://localhost:7300';
-    const platformUrl = process.env.PLATFORM_URL || 'http://localhost:5000';
+    const platformUrl = process.env.PLATFORM_URL || `http://localhost:${process.env.PORT || 5000}`;
 
     try {
       const relayResponse = await axios.post(`${federationRegistryUrl}/federation/relay-message`, {

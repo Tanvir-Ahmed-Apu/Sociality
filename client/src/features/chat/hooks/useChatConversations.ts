@@ -25,7 +25,13 @@ export const useChatConversations = () => {
             c.participants?.length > 0 &&
             c.participants.every((p: any) => p?._id && p?.username)
         );
-        setConversations(valid);
+        setConversations(
+          valid.sort((a: any, b: any) => {
+            const aTime = new Date(a.lastMessage?.createdAt || a.updatedAt || a.createdAt || 0).getTime();
+            const bTime = new Date(b.lastMessage?.createdAt || b.updatedAt || b.createdAt || 0).getTime();
+            return bTime - aTime;
+          })
+        );
       }
     } catch (error: any) {
       showToast("Error", error.message, "error");

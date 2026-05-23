@@ -7,6 +7,15 @@ import FederationRoom from '../models/federationRoomModel.js';
 
 const app = express();
 const PORT = Number(process.env.FEDERATION_PORT) || 7300;
+const SOCIALITY_PLATFORM_URL = process.env.PLATFORM_URL || `http://127.0.0.1:${process.env.PORT || 5000}`;
+const TELEGRAM_PLATFORM_URL = process.env.TELEGRAM_PLATFORM_URL || 'http://127.0.0.1:7301';
+const DISCORD_PLATFORM_URL = process.env.DISCORD_PLATFORM_URL || 'http://127.0.0.1:7302';
+
+const getDefaultPlatformUrls = () => [
+  SOCIALITY_PLATFORM_URL,
+  TELEGRAM_PLATFORM_URL,
+  DISCORD_PLATFORM_URL
+].filter(Boolean).map(normalizeUrl);
 
 // Helper to normalize localhost to 127.0.0.1
 const normalizeUrl = (url: string) => {
@@ -108,11 +117,7 @@ app.post('/federation/rooms', async (req, res) => {
     const normalizedUrl = normalizeUrl(peerUrl);
 
     // Ensure all platform peers are included in every room
-    const allPlatformUrls = [
-      'http://127.0.0.1:5000',  // sociality
-      'http://127.0.0.1:7301',  // telegram
-      'http://127.0.0.1:7302'   // discord
-    ];
+    const allPlatformUrls = getDefaultPlatformUrls();
     
     const peersToAdd = new Set([normalizedUrl, ...allPlatformUrls]);
 
@@ -188,11 +193,7 @@ app.post('/federation/relay-message', async (req, res) => {
       room = await FederationRoom.create({
         roomId,
         name: `Auto-created Room ${roomId}`,
-        peers: [
-          'http://127.0.0.1:5000',  // sociality
-          'http://127.0.0.1:7301',  // telegram
-          'http://127.0.0.1:7302'   // discord
-        ],
+        peers: getDefaultPlatformUrls(),
         messageCount: 0
       });
     }
@@ -326,11 +327,7 @@ app.get('/federation/rooms/:roomId/peers', async (req, res) => {
 // Ensure all platforms are registered in all existing rooms
 const ensureAllPlatformsInRooms = async () => {
   try {
-    const allPlatformUrls = [
-      'http://127.0.0.1:5000',  // sociality
-      'http://127.0.0.1:7301',  // telegram
-      'http://127.0.0.1:7302'   // discord
-    ];
+    const allPlatformUrls = getDefaultPlatformUrls();
 
     await FederationRoom.updateMany(
       {},

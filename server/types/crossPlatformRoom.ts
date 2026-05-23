@@ -21,10 +21,20 @@ export interface RoomResponse {
   name: string;
   groupPhoto?: string;
   creator?: any;
+  peers?: string[];
   participantCount: number;
   isPrivate: boolean;
   lastActivity?: Date;
   platforms?: string[];
+  lastMessage?: {
+    text?: string;
+    sender?: string;
+    seen?: boolean;
+    img?: string;
+    file?: string;
+    fileName?: string;
+    createdAt?: Date;
+  };
 }
 
 export interface ParticipantInfo {

@@ -4,7 +4,7 @@
  * Supports both light and dark modes with user preference
  */
 export const config = {
-  initialColorMode: "light", // Default to light mode to match user preference
+  initialColorMode: "system", // Follow the visitor's system preference on first load
   useSystemColorMode: true, // Allow system preference to be used when 'system' mode is selected
   disableTransitionOnChange: false, // Allow smooth transitions
 };

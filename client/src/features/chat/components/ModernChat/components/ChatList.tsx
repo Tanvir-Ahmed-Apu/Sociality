@@ -8,6 +8,23 @@ import { FiSearch, FiPlus, FiMessageSquare } from 'react-icons/fi';
 import { FaGlobe, FaTelegram, FaDiscord } from "react-icons/fa";
 import { useChatTheme } from '../../../hooks/useChatTheme';
 
+const getMessagePreview = (item: any) => {
+  if (item.lastMessage?.text) return item.lastMessage.text;
+  if (item.lastMessage?.img) return "Image";
+  if (item.lastMessage?.file) return item.lastMessage.fileName || "File";
+  return item.mock ? "Start a new conversation" : "";
+};
+
+const getMessageTime = (item: any) => {
+  const timestamp = item.lastMessage?.createdAt || item.updatedAt || item.lastActivity;
+  if (!timestamp) return "";
+
+  const date = new Date(timestamp);
+  if (Number.isNaN(date.getTime())) return "";
+
+  return date.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+};
+
 export const ChatList = ({
   currentUser,
   conversations,
@@ -182,7 +199,8 @@ export const ChatList = ({
           const participant = item?.participants?.[0];
           const displayName = item.name || participant?.username;
           const displayPic = item.groupPhoto || participant?.profilePic;
-          const lastMsg = item.lastMessage?.text || (item.mock ? "Start a new conversation" : "New conversation");
+          const lastMsg = getMessagePreview(item);
+          const messageTime = getMessageTime(item);
 
           return (
             <HStack 
@@ -240,7 +258,9 @@ export const ChatList = ({
                   >
                     {displayName}
                   </Text>
-                  <Text fontSize="10px" fontWeight="600" color={mutedColor}>12:45 PM</Text>
+                  {messageTime && (
+                    <Text fontSize="10px" fontWeight="600" color={mutedColor}>{messageTime}</Text>
+                  )}
                 </Flex>
                 <Text 
                   fontSize="sm" 

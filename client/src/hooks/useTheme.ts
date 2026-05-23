@@ -9,6 +9,9 @@ import { themeAtom } from '../atoms';
 import { STORAGE_KEYS } from '../utils/constants';
 import { applyThemeToDocument } from '../utils/themeUtils';
 
+const getSystemColorMode = () =>
+  window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+
 const useTheme = () => {
   const [theme, setTheme] = useRecoilState(themeAtom);
   const { colorMode, setColorMode } = useColorMode();
@@ -37,14 +40,14 @@ const useTheme = () => {
 
     if (isValidTheme(savedTheme)) {
       setTheme(savedTheme);
-      setColorMode(savedTheme);
+      setColorMode(savedTheme === 'system' ? getSystemColorMode() : savedTheme);
     } else {
       // Default to system mode
       setTheme('system');
-      setColorMode('system');
+      setColorMode(getSystemColorMode());
       localStorage.setItem(STORAGE_KEYS.THEME, 'system');
     }
-  }, []); // Empty dependency array to run only once
+  }, [setColorMode, setTheme]);
 
   // Sync theme changes with Chakra UI, document, and localStorage
   useEffect(() => {
@@ -56,8 +59,9 @@ const useTheme = () => {
       applyThemeToDocument(theme);
       
       // Update Chakra color mode
-      if (theme !== colorMode) {
-        setColorMode(theme);
+      const nextColorMode = theme === 'system' ? getSystemColorMode() : theme;
+      if (nextColorMode !== colorMode) {
+        setColorMode(nextColorMode);
       }
       
       // Save to localStorage
@@ -79,6 +83,7 @@ const useTheme = () => {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     const handleChange = () => {
       applyThemeToDocument('system');
+      setColorMode(getSystemColorMode());
     };
 
     // Modern API
@@ -96,7 +101,7 @@ const useTheme = () => {
         mediaQuery.removeListener(handleChange);
       }
     };
-  }, [theme]);
+  }, [theme, setColorMode]);
 
   // Toggle between light and dark themes (manual override)
   const toggleTheme = useCallback(() => {

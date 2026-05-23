@@ -170,8 +170,8 @@ server.listen(PORT, '0.0.0.0', () => {
 // Function to register with federation registry
 async function registerWithFederation() {
 	try {
-		const federationRegistryUrl = 'http://127.0.0.1:7300';
-		const platformUrl = 'http://127.0.0.1:5000';
+		const federationRegistryUrl = process.env.FEDERATION_REGISTRY_URL || 'http://127.0.0.1:7300';
+		const platformUrl = process.env.PLATFORM_URL || `http://127.0.0.1:${PORT}`;
 		const platformName = 'sociality';
 
 		await axios.post(`${federationRegistryUrl}/federation/peers`, {

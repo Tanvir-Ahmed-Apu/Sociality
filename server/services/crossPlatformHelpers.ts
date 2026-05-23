@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import Room from "../models/roomModel.js";
 
 export const FEDERATION_REGISTRY_URL = process.env.FEDERATION_REGISTRY_URL || 'http://localhost:7300';
-export const PLATFORM_URL = process.env.PLATFORM_URL || 'http://localhost:5000';
+export const PLATFORM_URL = process.env.PLATFORM_URL || `http://localhost:${process.env.PORT || 5000}`;
 
 export const generateRoomCode = () => {
   const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
