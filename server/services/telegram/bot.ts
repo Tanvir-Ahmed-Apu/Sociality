@@ -23,6 +23,10 @@ export async function initBot() {
 
   try {
     bot = new TelegramBotClient(TELEGRAM_BOT_TOKEN);
+    const botInfo = await bot.getMe();
+    logger.info(`Telegram bot initialized: @${botInfo.username || botInfo.first_name}`);
+
+    await bot.deleteWebhook({ drop_pending_updates: false });
     bot.startPolling();
 
     bot.on('polling_error', (error: any) => {
@@ -238,8 +242,22 @@ async function handleIncomingMessage(msg: any) {
 
   const chatId = msg.chat.id;
   try {
-const binding = await TelegramBinding.findOne({ telegramChatId: chatId.toString(), isActive: true });
-    if (!binding) return;
+    logger.info('Telegram message received', {
+      chatId: chatId.toString(),
+      chatType: msg.chat.type,
+      messageId: msg.message_id,
+      from: msg.from?.username || msg.from?.first_name || msg.from?.id
+    });
+
+    const binding = await TelegramBinding.findOne({ telegramChatId: chatId.toString(), isActive: true });
+    if (!binding) {
+      logger.warn('Telegram message ignored because chat is not bound to a room', {
+        chatId: chatId.toString(),
+        chatType: msg.chat.type,
+        chatTitle: msg.chat.title || msg.chat.username || ''
+      });
+      return;
+    }
 
     const username = msg.from?.username || msg.from?.first_name || 'Unknown User';
     const federatedMessage = {
@@ -256,10 +274,15 @@ const binding = await TelegramBinding.findOne({ telegramChatId: chatId.toString(
       roomId: binding.roomId
     };
 
-    await axios.post(`${FEDERATION_REGISTRY_URL}/federation/relay-message`, {
+    const relayResponse = await axios.post(`${FEDERATION_REGISTRY_URL}/federation/relay-message`, {
       roomId: binding.roomId,
       message: federatedMessage,
       originatingPlatform: PLATFORM_URL
+    });
+
+    logger.info('Telegram message relayed to federation registry', {
+      roomId: binding.roomId,
+      relayResults: relayResponse.data?.results || []
     });
 
     binding.messageCount = (binding.messageCount || 0) + 1;

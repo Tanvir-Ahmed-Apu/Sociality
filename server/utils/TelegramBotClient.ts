@@ -82,6 +82,14 @@ export class TelegramBotClient extends EventEmitter {
     });
   }
 
+  async getMe() {
+    return this.request('getMe');
+  }
+
+  async deleteWebhook(options: any = {}) {
+    return this.request('deleteWebhook', options);
+  }
+
   async sendPhoto(chatId: string | number, photo: string, options: any = {}) {
     return this.request('sendPhoto', {
       chat_id: chatId,
