@@ -10,16 +10,14 @@ const TOKEN_KEY_PREFIX = 'jwt-token-';
 export const setToken = (token: string) => {
   const tabId = getTabId();
   localStorage.setItem(`${TOKEN_KEY_PREFIX}${tabId}`, token);
-  localStorage.setItem(`${TOKEN_KEY_PREFIX}last`, token);
 };
 
 export const getToken = (): string | null => {
   const tabId = getTabId();
-  return localStorage.getItem(`${TOKEN_KEY_PREFIX}${tabId}`) || localStorage.getItem(`${TOKEN_KEY_PREFIX}last`);
+  return localStorage.getItem(`${TOKEN_KEY_PREFIX}${tabId}`);
 };
 
 export const clearToken = () => {
   const tabId = getTabId();
   localStorage.removeItem(`${TOKEN_KEY_PREFIX}${tabId}`);
-  localStorage.removeItem(`${TOKEN_KEY_PREFIX}last`);
 };

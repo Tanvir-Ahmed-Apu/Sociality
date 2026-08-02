@@ -1,6 +1,5 @@
 import { atom } from 'recoil';
 import type { User, Post } from '../types/models';
-import { getCurrentTabUser } from '../utils/session';
 
 /**
  * Message Types
@@ -47,7 +46,7 @@ export const authScreenAtom = atom<'login' | 'signup'>({
  */
 export const userAtom = atom<User | null>({
 	key: 'userAtom',
-	default: getCurrentTabUser(),
+	default: null,
 });
 
 /**
