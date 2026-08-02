@@ -17,13 +17,14 @@ export const clearCurrentTabAuth = () => {
   const tabId = getTabId();
   const userKey = `user-threads-${tabId}`;
   localStorage.removeItem(userKey);
+  localStorage.removeItem('user-threads-last');
   clearToken();
 };
 
 export const getCurrentTabUser = (): User | null => {
   const tabId = getTabId();
   const userKey = `user-threads-${tabId}`;
-  const userData = localStorage.getItem(userKey);
+  const userData = localStorage.getItem(userKey) || localStorage.getItem('user-threads-last');
   return userData ? JSON.parse(userData) : null;
 };
 
@@ -31,9 +32,12 @@ export const setCurrentTabUser = (userData: User | null) => {
   const tabId = getTabId();
   const userKey = `user-threads-${tabId}`;
   if (userData) {
-    localStorage.setItem(userKey, JSON.stringify(userData));
+    const stringified = JSON.stringify(userData);
+    localStorage.setItem(userKey, stringified);
+    localStorage.setItem('user-threads-last', stringified);
   } else {
     localStorage.removeItem(userKey);
+    localStorage.removeItem('user-threads-last');
   }
 };
 
