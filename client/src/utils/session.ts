@@ -4,6 +4,8 @@ import { User } from '../types/models';
 import { apiFetch } from './apiBase';
 import { clearToken } from './tokenStore';
 
+const SHARED_USER_KEY = 'auth-user';
+
 export const getTabId = () => {
   let tabId = sessionStorage.getItem('tabId');
   if (!tabId) {
@@ -17,6 +19,8 @@ export const clearCurrentTabAuth = () => {
   const tabId = getTabId();
   const userKey = `user-threads-${tabId}`;
   localStorage.removeItem(userKey);
+  // Also remove shared user on explicit logout
+  localStorage.removeItem(SHARED_USER_KEY);
   clearToken();
 };
 
@@ -24,7 +28,11 @@ export const getCurrentTabUser = (): User | null => {
   const tabId = getTabId();
   const userKey = `user-threads-${tabId}`;
   const userData = localStorage.getItem(userKey);
-  return userData ? JSON.parse(userData) : null;
+  if (userData) return JSON.parse(userData);
+
+  // Fallback to shared user (persists across tabs / visits)
+  const shared = localStorage.getItem(SHARED_USER_KEY);
+  return shared ? JSON.parse(shared) : null;
 };
 
 export const setCurrentTabUser = (userData: User | null) => {
@@ -32,8 +40,15 @@ export const setCurrentTabUser = (userData: User | null) => {
   const userKey = `user-threads-${tabId}`;
   if (userData) {
     localStorage.setItem(userKey, JSON.stringify(userData));
+    // Also write a shared copy so other tabs / future visits can reuse it
+    try {
+      localStorage.setItem(SHARED_USER_KEY, JSON.stringify(userData));
+    } catch (e) {
+      // ignore quota errors
+    }
   } else {
     localStorage.removeItem(userKey);
+    localStorage.removeItem(SHARED_USER_KEY);
   }
 };
 
