@@ -85,7 +85,10 @@ router.get('/oauth/user', async (req: any, res: any) => {
         // Get session path from query parameter
         const sessionPath = (req.query.session as string) || '';
         const cookieName = sessionPath ? `jwt-sociality${sessionPath.replace(/\//g, '-')}` : 'jwt-sociality';
-        const token = req.cookies[cookieName] || req.cookies.jwt || req.cookies['jwt-sociality'];
+        let token = req.cookies[cookieName] || req.cookies.jwt || req.cookies['jwt-sociality'];
+        if (!token && req.headers.authorization) {
+            token = req.headers.authorization.split(' ')[1];
+        }
 
         if (!token) {
             return res.status(401).json({ error: 'No token provided' });

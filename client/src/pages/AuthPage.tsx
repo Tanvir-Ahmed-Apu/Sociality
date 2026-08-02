@@ -1,33 +1,21 @@
-import { useRecoilValue } from "recoil";
 import LoginCard from "../features/auth/components/LoginCard";
-import SignupCard from "../features/auth/components/SignupCard";
-import { authScreenAtom } from "../atoms";
 import { Box, HStack, Link, Text, useColorModeValue } from "@chakra-ui/react";
 import { useEffect } from "react";
 
 const AuthPage = () => {
-	const authScreenState = useRecoilValue(authScreenAtom);
-
-	// Add effect to disable scrolling on auth page
 	useEffect(() => {
-		// Add the auth-page-no-scroll class to the body
 		document.body.classList.add('auth-page-no-scroll');
-
-		// Cleanup function to remove the class when component unmounts
 		return () => {
 			document.body.classList.remove('auth-page-no-scroll');
 		};
 	}, []);
-
-	// No background elements or animations
 
 	return (
 		<Box
 			position="relative"
 			minHeight="100vh"
 			w="full"
-			overflowY={authScreenState === "signup" ? "auto" : "hidden"}
-			overflowX="hidden"
+			overflow="hidden"
 			bg={useColorModeValue("#F5F5F7", "#0A0A0A")}
 			display="flex"
 			flexDirection="column"
@@ -55,10 +43,9 @@ const AuthPage = () => {
 				display="flex" 
 				flex={1} 
 				flexDirection="column"
-				justifyContent={authScreenState === "signup" ? "flex-start" : "center"}
-				py={authScreenState === "signup" ? 8 : 0}
+				justifyContent="center"
 			>
-				{authScreenState === "login" ? <LoginCard /> : <SignupCard />}
+				<LoginCard />
 			</Box>
 
 			{/* Footer links */}
