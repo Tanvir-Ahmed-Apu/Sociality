@@ -4,6 +4,9 @@ import { User } from '../types/models';
 import { apiFetch } from './apiBase';
 import { clearToken } from './tokenStore';
 
+// Global key shared across all browser tabs (not tied to sessionStorage tabId)
+const GLOBAL_USER_KEY = 'user-threads-global';
+
 export const getTabId = () => {
   let tabId = sessionStorage.getItem('tabId');
   if (!tabId) {
@@ -16,14 +19,17 @@ export const getTabId = () => {
 export const clearCurrentTabAuth = () => {
   const tabId = getTabId();
   const userKey = `user-threads-${tabId}`;
+  // Clear both the tab-specific key AND the global key on logout
   localStorage.removeItem(userKey);
+  localStorage.removeItem(GLOBAL_USER_KEY);
   clearToken();
 };
 
 export const getCurrentTabUser = (): User | null => {
   const tabId = getTabId();
   const userKey = `user-threads-${tabId}`;
-  const userData = localStorage.getItem(userKey);
+  // Try tab-specific first, then fall back to global (new tab scenario)
+  const userData = localStorage.getItem(userKey) ?? localStorage.getItem(GLOBAL_USER_KEY);
   return userData ? JSON.parse(userData) : null;
 };
 
@@ -31,9 +37,13 @@ export const setCurrentTabUser = (userData: User | null) => {
   const tabId = getTabId();
   const userKey = `user-threads-${tabId}`;
   if (userData) {
-    localStorage.setItem(userKey, JSON.stringify(userData));
+    const json = JSON.stringify(userData);
+    localStorage.setItem(userKey, json);
+    // Also write to global key so other tabs (and new tabs) can pick it up
+    localStorage.setItem(GLOBAL_USER_KEY, json);
   } else {
     localStorage.removeItem(userKey);
+    localStorage.removeItem(GLOBAL_USER_KEY);
   }
 };
 
