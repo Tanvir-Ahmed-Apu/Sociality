@@ -22,7 +22,6 @@ const getFrontendUrl = (req: any) => {
 router.get('/google',
     passport.authenticate('google', {
         scope: ['profile', 'email'],
-        prompt: 'select_account', // Force account selection
         accessType: 'offline'
     })
 );
@@ -31,7 +30,6 @@ router.get('/google',
 router.get('/google/popup',
     passport.authenticate('google-popup' as any, {
         scope: ['profile', 'email'],
-        prompt: 'select_account', // Force account selection
         accessType: 'offline'
     })
 );
