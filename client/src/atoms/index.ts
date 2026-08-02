@@ -49,6 +49,12 @@ export const userAtom = atom<User | null>({
 	default: null,
 });
 
+// Indicates whether the app is initializing auth state from storage / backend
+export const authInitializingAtom = atom<boolean>({
+	key: 'authInitializingAtom',
+	default: true,
+});
+
 /**
  * Post Atoms
  */
