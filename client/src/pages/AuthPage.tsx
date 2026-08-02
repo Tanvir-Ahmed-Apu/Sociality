@@ -47,17 +47,6 @@ const AuthPage = () => {
 			>
 				<LoginCard />
 			</Box>
-
-			{/* Footer links */}
-			<Box position="relative" pb={4} pt={4} w="full" textAlign="center">
-				<HStack justify="center" spacing={4} fontSize="10px" color={useColorModeValue("gray.400", "gray.600")}>
-					<Text>© 2026 Sociality</Text>
-					<Link _hover={{ color: useColorModeValue("black", "white") }}>Terms</Link>
-					<Link _hover={{ color: useColorModeValue("black", "white") }}>Privacy Policy</Link>
-					<Link _hover={{ color: useColorModeValue("black", "white") }}>Cookies Policy</Link>
-					<Link _hover={{ color: useColorModeValue("black", "white") }}>Report a problem</Link>
-				</HStack>
-			</Box>
 		</Box>
 	);
 };
