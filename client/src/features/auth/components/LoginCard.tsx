@@ -308,7 +308,7 @@ export default function LoginCard() {
 							</Button>
 
 							<Text fontSize="xs" color={subTextColor} pt={2}>
-								By continuing, you agree to our Terms of Service & Privacy Policy.
+								Press Continue. We promise not to sell your soul.
 							</Text>
 						</VStack>
 					</VStack>
