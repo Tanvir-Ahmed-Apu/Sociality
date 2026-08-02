@@ -1,10 +1,5 @@
 import { Request, Response } from "express";
-import User from "../models/userModel.js";
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-import generateTokenAndSetCookie from "../utils/helpers/generateTokenAndSetCookie.js";
 import logger from "../utils/logger.js";
-import suggestionCache from "../utils/cache.js";
 
 const signupUser = async (req: Request, res: Response) => {
 	return res.status(400).json({ error: "Manual account creation is disabled. Please sign in with Google." });

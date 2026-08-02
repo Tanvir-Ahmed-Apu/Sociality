@@ -76,6 +76,7 @@ const corsOptions = {
 };
 
 // Middlewares
+app.set("trust proxy", 1);
 app.use(cors(corsOptions));
 app.use(express.json({ limit: "50mb" })); // To parse JSON data in the req.body
 app.use(express.urlencoded({ extended: true })); // To parse form data in the req.body

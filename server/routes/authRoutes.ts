@@ -6,6 +6,18 @@ import generateTokenAndSetCookie from '../utils/helpers/generateTokenAndSetCooki
 
 const router = express.Router();
 
+const getFrontendUrl = (req: any) => {
+    if (process.env.NODE_ENV === 'production' && process.env.FRONTEND_URL && !process.env.FRONTEND_URL.includes('localhost')) {
+        return process.env.FRONTEND_URL;
+    }
+    const host = req.get('host') || '';
+    if (process.env.NODE_ENV === 'production' || (!host.includes('localhost') && !host.includes('127.0.0.1') && host !== '')) {
+        const protocol = req.protocol === 'https' || req.get('x-forwarded-proto') === 'https' ? 'https' : 'http';
+        return `${protocol}://${host}`;
+    }
+    return process.env.FRONTEND_URL || 'http://localhost:7100';
+};
+
 // Google OAuth routes
 router.get('/google',
     passport.authenticate('google', {
@@ -29,7 +41,7 @@ router.get('/google/callback',
         failureRedirect: '/auth?error=oauth_failed'
     }),
     async (req: any, res: any) => {
-        const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:7100';
+        const frontendUrl = getFrontendUrl(req);
         try {
             // Generate unique session path
             const sessionPath = `/session-${Date.now()}`;
@@ -55,7 +67,7 @@ router.get('/google/popup/callback',
         failureRedirect: '/oauth-popup-callback?error=oauth_failed'
     }),
     async (req: any, res: any) => {
-        const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:7100';
+        const frontendUrl = getFrontendUrl(req);
         const tabId = req.query.state || ''; // Using state as a placeholder for tabId if passed through OAuth state
 
         try {
