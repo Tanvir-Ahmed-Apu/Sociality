@@ -45,7 +45,7 @@ router.get('/google/callback',
             const sessionPath = `/session-${Date.now()}`;
             
             // Generate JWT token and set cookie with session path
-            generateTokenAndSetCookie(req.user._id, res, sessionPath);
+            generateTokenAndSetCookie(req.user._id, res);
 
             if (!req.user.isProfileComplete) {
                 res.redirect(`${frontendUrl}/?oauth=success&setup=required&session=${sessionPath}`);
@@ -73,7 +73,7 @@ router.get('/google/popup/callback',
             const sessionPath = `/session-${Date.now()}`;
 
             // Generate JWT token and set cookie with session path
-            generateTokenAndSetCookie(req.user._id, res, sessionPath);
+            generateTokenAndSetCookie(req.user._id, res);
 
             if (!req.user.isProfileComplete) {
                 const redirectUrl = `${frontendUrl}/oauth-popup-callback?oauth=success&setup=required&session=${sessionPath}${tabId ? `&tabId=${tabId}` : ''}`;
