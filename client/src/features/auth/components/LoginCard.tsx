@@ -9,7 +9,7 @@ import {
 	useColorMode,
 	Spinner,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useSetRecoilState } from "recoil";
 import { userAtom } from "../../../atoms";
 import useShowToast from "../../../hooks/useShowToast";
@@ -34,6 +34,17 @@ export default function LoginCard() {
 	const googleBtnBg = useColorModeValue("white", "#1A1A1A");
 	const googleBtnBorder = useColorModeValue("blackAlpha.200", "whiteAlpha.200");
 	const googleBtnHoverBg = useColorModeValue("gray.50", "#222222");
+
+	const stars = useMemo(() => {
+		return Array.from({ length: 180 }).map(() => ({
+			top: Math.random() * 100,
+			left: Math.random() * 100,
+			size: Math.random() * 2 + 1, // 1px - 3px
+			duration: Math.random() * 3 + 2, // 2s - 5s
+			delay: Math.random() * 5, // 0s - 5s
+			opacity: Math.random() * 0.5 + 0.4, // 0.4 - 0.9 peak opacity
+		}));
+	}, []);
 
 	const handleGoogleLogin = async () => {
 		const onSuccess = (userData: any) => {
@@ -101,11 +112,11 @@ export default function LoginCard() {
 				.aurora-overlay {
 					--aurora: repeating-linear-gradient(
 						100deg,
-						#16a34a 10%,
-						#4ade80 15%,
-						#86efac 20%,
-						#bbf7d0 25%,
-						#22c55e 30%
+						#00DF89 10%, 
+						#009E95 25%, 
+						#0082C8 45%, 
+						#005885 65%, 
+						#00DF89 85%
 					);
 					--white-gradient: repeating-linear-gradient(
 						100deg,
@@ -171,6 +182,43 @@ export default function LoginCard() {
 					}
 				}
 
+				.star-layer {
+					position: absolute;
+					inset: 0;
+					overflow: hidden;
+					pointer-events: none;
+					z-index: 2;
+				}
+
+				.star {
+					position: absolute;
+					border-radius: 50%;
+					background: #ffffff;
+					box-shadow: 0 0 4px 1px rgba(255, 255, 255, 0.6);
+					animation-name: twinkle;
+					animation-timing-function: ease-in-out;
+					animation-iteration-count: infinite;
+				}
+
+				@keyframes twinkle {
+					0%,
+					100% {
+						opacity: 0.15;
+						transform: scale(0.8);
+					}
+					50% {
+						opacity: var(--peak-opacity, 0.9);
+						transform: scale(1.15);
+					}
+				}
+
+				@media (prefers-reduced-motion: reduce) {
+					.star {
+						animation: none;
+						opacity: 0.6;
+					}
+				}
+
 				.aurora-content {
 					position: relative;
 					z-index: 10;
@@ -183,6 +231,25 @@ export default function LoginCard() {
 
 			<div className="aurora-layer">
 				<div className="aurora-overlay" />
+			</div>
+
+			<div className="star-layer">
+				{stars.map((star, i) => (
+					<span
+						key={i}
+						className="star"
+						style={{
+							top: `${star.top}%`,
+							left: `${star.left}%`,
+							width: `${star.size}px`,
+							height: `${star.size}px`,
+							animationDuration: `${star.duration}s`,
+							animationDelay: `${star.delay}s`,
+							// @ts-ignore - custom property for the keyframe
+							"--peak-opacity": star.opacity,
+						}}
+					/>
+				))}
 			</div>
 
 			<div className="aurora-content">
